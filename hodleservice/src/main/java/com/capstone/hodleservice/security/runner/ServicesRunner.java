@@ -5,12 +5,16 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.capstone.hodleservice.security.service.AssetService;
 import com.capstone.hodleservice.security.service.UserService;
+import com.capstone.hodleservice.security.service.WalletService;
 
 @Component
 public class ServicesRunner implements ApplicationRunner {
 
-	@Autowired UserService uservSvc;
+	@Autowired UserService uSvc;
+	@Autowired WalletService wSvc;
+	@Autowired AssetService aSvc;
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {

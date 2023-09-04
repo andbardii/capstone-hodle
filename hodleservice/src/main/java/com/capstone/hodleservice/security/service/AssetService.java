@@ -1,7 +1,5 @@
 package com.capstone.hodleservice.security.service;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -10,16 +8,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.capstone.hodleservice.security.entity.Asset;
-import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.enumerated.AssetClass;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.AssetZone;
-import com.capstone.hodleservice.security.enumerated.WalletType;
 import com.capstone.hodleservice.security.repository.AssetRepository;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 @Service
 public class AssetService {
@@ -78,6 +70,12 @@ public class AssetService {
 		Asset a = repo.findById(id).get();
 		log.info(a.toString());
 		return a;
+	}
+	
+	//DELETE METHODS
+	private void deleteAsset(Long id) {
+		repo.deleteById(id);
+		log.info("Asset" + id + "eliminato con successo");
 	}
 	
 }

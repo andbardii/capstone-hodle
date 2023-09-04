@@ -1,5 +1,7 @@
 package com.capstone.hodleservice.security.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -41,5 +43,15 @@ public class WalletService {
 		return w;
 	}
 	
+	public List<Wallet> findByUserId(long id) {
+		List<Wallet> l = repo.findByUserId(id);
+		l.forEach(w -> w.toString());
+		return l;
+	}
 	
+	//DELETE METHOD
+	private void deleteWallet(Long id) {
+		repo.deleteById(id);
+		log.info("Wallet" + id + "eliminato con successo");
+	}
 }
