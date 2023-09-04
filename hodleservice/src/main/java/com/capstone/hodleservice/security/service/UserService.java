@@ -22,20 +22,20 @@ public class UserService {
 		return u;
 	}
 	
-	private User findByEmail(String email) {
+	public User findByEmail(String email) {
 		User u = repo.findByEmail(email).get();
 		log.info(u.toString());
 		return u;
 	}
 	
-	private User findByUsername(String username) {
+	public User findByUsername(String username) {
 		User u = repo.findByUsername(username).get();
 		log.info(u.toString());
 		return u;
 	}
 
 	//DELETE METHOD
-	private void deleteUser(Long id) {
+	public void deleteUser(Long id) {
 		repo.deleteById(id);
 		log.info("Utente" + id + "eliminato con successo");
 	}

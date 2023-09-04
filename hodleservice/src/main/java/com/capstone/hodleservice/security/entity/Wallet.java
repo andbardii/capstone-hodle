@@ -34,6 +34,8 @@ public class Wallet {
 	@Column(nullable= false)
 	private Long userId;
 	
+	private Long number;
+	
 	@Column(nullable= false)
 	private Double value;
 	

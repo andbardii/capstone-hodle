@@ -1,5 +1,7 @@
 package com.capstone.hodleservice.security.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -8,9 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.capstone.hodleservice.security.entity.Asset;
+import com.capstone.hodleservice.security.entity.Movement;
 import com.capstone.hodleservice.security.enumerated.AssetClass;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.AssetZone;
+import com.capstone.hodleservice.security.enumerated.MovementType;
 import com.capstone.hodleservice.security.repository.AssetRepository;
 
 @Service
@@ -32,7 +36,7 @@ public class AssetService {
 			AssetZone zone,
 			String issuer,
 			String intermediary,
-			Double ammount,
+			Double amount,
 			String ISIN,
 		    Double tax,
 		    String exchange,
@@ -50,14 +54,14 @@ public class AssetService {
 					.zone(zone)
 					.issuer(issuer)
 					.intermediary(intermediary)
-					.ammount(ammount)
+					.amount(amount)
 					.ISIN(ISIN)
 					.tax(tax)
 					.exchange(exchange)
 					.averagePurchasePrice(averagePurchasePrice)
 					.paidCommission(paidCommission)
 					.marketPrice(marketPrice)
-					.marketValue(marketValue)
+					.marketValue(marketPrice * amount)
 					.build();
 			repo.save(a);
 			System.out.println();
@@ -72,8 +76,37 @@ public class AssetService {
 		return a;
 	}
 	
+	public List<Asset> findByWalletId(long id) {
+		List<Asset> l = repo.findByWalletId(id);
+		l.forEach(a -> a.toString());
+		return l;
+	}
+	//PUT METHODS
+	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount, List<Movement> olderMovements) {
+		Asset a = repo.findById(assetId).get();
+		a.setAmount(a.getAmount() + assetAmmount);
+		if(olderMovements.size() == 0) {
+			a.setAveragePurchasePrice(purchasePrice);
+			repo.save(a);
+			return a;
+		}else {
+			Double total = 0.00;
+			for(Movement m : olderMovements){
+				if(m.getMovementType().equals(MovementType.INCOMING) ||
+				   m.getMovementType().equals(MovementType.CONVERT) ||
+				   m.getMovementType().equals(MovementType.TRANSFER)) 
+				total += m.getPurchasePrice();
+			};
+			Double averagePurchasePrice = total/olderMovements.size();
+			a.setAveragePurchasePrice(averagePurchasePrice);
+			repo.save(a);
+			return a;
+		}
+		
+	}
+	
 	//DELETE METHODS
-	private void deleteAsset(Long id) {
+	public void deleteAsset(Long id) {
 		repo.deleteById(id);
 		log.info("Asset" + id + "eliminato con successo");
 	}

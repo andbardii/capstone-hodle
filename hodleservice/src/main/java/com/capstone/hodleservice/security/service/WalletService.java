@@ -29,6 +29,7 @@ public class WalletService {
 				    .walletType(type)
 				    .userId(userId)
 					.value(value)
+					.number(this.findByUserId(userId).size()+1l)
 					.build();
 			repo.save(w);
 			System.out.println();
@@ -43,6 +44,12 @@ public class WalletService {
 		return w;
 	}
 	
+	public List<Wallet> findAll(){
+		List<Wallet> l = (List<Wallet>)repo.findAll();
+		l.forEach(c -> log.info(c.toString()));
+		return l;
+	}
+	
 	public List<Wallet> findByUserId(long id) {
 		List<Wallet> l = repo.findByUserId(id);
 		l.forEach(w -> w.toString());
@@ -50,7 +57,7 @@ public class WalletService {
 	}
 	
 	//DELETE METHOD
-	private void deleteWallet(Long id) {
+	public void deleteWallet(Long id) {
 		repo.deleteById(id);
 		log.info("Wallet" + id + "eliminato con successo");
 	}

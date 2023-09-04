@@ -1,9 +1,9 @@
 package com.capstone.hodleservice.security.entity;
 
-
 import com.capstone.hodleservice.security.enumerated.AssetClass;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.AssetZone;
+import com.capstone.hodleservice.security.enumerated.MovementType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,40 +23,31 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@Table(name="assets")
-public class Asset {
+@Table(name="movements")
+public class Movement {
 
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@Enumerated(EnumType.STRING)
+	private MovementType movementType;
+	
 	@Column(nullable= false)
-	private Long walletId;
+	private Long userId;
 	
-	private String name;
-	private String ticker;
+	private Long number; 
 	
-	@Enumerated(EnumType.STRING)
-	private AssetType assetType;
+	private Long startingWalletId;
+	private Long endingWalletId;
 	
-	@Enumerated(EnumType.STRING)
-	private AssetClass assetClass;
+	private Long startingAssetId;
+	private Long endingAssetId;
 	
-	@Enumerated(EnumType.STRING)
-	private AssetZone zone;
+	private Double startingAssetAmmount;
+	private Double endingAssetAmmount;
 	
-	private String issuer;
-	private String intermediary;
-	private Double amount;
-	
-	@Column(unique = true)
-    private String ISIN;
-    
-    private Double tax;
-    private String exchange;
-    private Double averagePurchasePrice;
-    private Double paidCommission;
-    private Double marketPrice;
-    private Double marketValue;
-    
+	private Double purchasePrice;
+
 }
