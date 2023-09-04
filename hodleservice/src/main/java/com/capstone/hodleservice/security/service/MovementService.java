@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.hodleservice.security.entity.Asset;
 import com.capstone.hodleservice.security.entity.Movement;
+import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.MovementType;
 import com.capstone.hodleservice.security.repository.MovementRepository;
@@ -25,6 +26,18 @@ public class MovementService {
 	@Autowired AssetService aSvc;
 	
 	@Autowired @Qualifier("movement") private ObjectProvider<Movement> provider;
+	
+	//GET METHODS
+	public Movement findById(long id) {
+		Movement m = repo.findById(id).get();
+		log.info(m.toString());
+		return m;
+	}
+	public List<Movement> findByUserId(long userId) {
+		List<Movement> l = repo.findByUserId(userId);
+		l.forEach(m -> m.toString());
+		return l;
+	}
 	
 	//POST METHODS
 	public Movement addIncoming(Long userId, 

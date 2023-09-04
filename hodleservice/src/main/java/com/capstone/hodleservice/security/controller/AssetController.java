@@ -1,5 +1,7 @@
 package com.capstone.hodleservice.security.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,14 @@ public class AssetController {
 	public ResponseEntity<?> findById(@PathVariable Long id) {
 		Asset a = svc.findById(id);
 		ResponseEntity<Asset> resp = new ResponseEntity<Asset>(a, HttpStatus.OK);
+		return resp;
+	}
+	//GET METHODS
+	@GetMapping("/bywallet/{id}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
+		List<Asset> l = svc.findByWalletId(walletId);
+		ResponseEntity<List<Asset>> resp = new ResponseEntity<List<Asset>>(l, HttpStatus.OK);
 		return resp;
 	}
 }
