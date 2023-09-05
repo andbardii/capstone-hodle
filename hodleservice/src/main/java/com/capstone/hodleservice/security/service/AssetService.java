@@ -24,6 +24,8 @@ public class AssetService {
 	
 	@Autowired AssetRepository repo;
 	
+	@Autowired WalletService wSvc;
+	
 	@Autowired @Qualifier("asset") private ObjectProvider<Asset> provider;
 	
 	//POST METHODS
@@ -40,10 +42,9 @@ public class AssetService {
 			String ISIN,
 		    Double tax,
 		    String exchange,
-		    Double averagePurchasePrice,
-		    Double paidCommission,
 		    Double marketPrice,
-		    Double marketValue) {
+		    Double averagePurchasePrice,
+		    Double paidCommission) {
 
 			Asset a = provider.getObject().builder()
 				    .walletId(walletId)
@@ -59,11 +60,14 @@ public class AssetService {
 					.tax(tax)
 					.exchange(exchange)
 					.averagePurchasePrice(averagePurchasePrice)
-					.paidCommission(paidCommission)
 					.marketPrice(marketPrice)
 					.marketValue(marketPrice * amount)
+					.paidCommission(paidCommission)
 					.build();
 			repo.save(a);
+
+			wSvc.updateValue(true, walletId,(Double)(marketPrice * amount));
+			
 			System.out.println();
 			log.info("Asset Id: " + a.getId() + " aggiunto correttamente.");
 			return a;
@@ -85,6 +89,7 @@ public class AssetService {
 	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount, List<Movement> olderMovements) {
 		Asset a = repo.findById(assetId).get();
 		a.setAmount(a.getAmount() + assetAmmount);
+		a.setMarketValue(a.getMarketPrice() * a.getAmount());
 		if(olderMovements.size() == 0) {
 			a.setAveragePurchasePrice(purchasePrice);
 			repo.save(a);
@@ -104,7 +109,13 @@ public class AssetService {
 		}
 		
 	}
-	
+	public Asset removeAmount(Long assetId, Double assetAmmount) {
+		Asset a = repo.findById(assetId).get();
+		a.setAmount(a.getAmount() - assetAmmount);
+		a.setMarketValue(a.getMarketPrice() * a.getAmount());
+		repo.save(a);
+		return a;
+	}
 	//DELETE METHODS
 	public void deleteAsset(Long id) {
 		repo.deleteById(id);

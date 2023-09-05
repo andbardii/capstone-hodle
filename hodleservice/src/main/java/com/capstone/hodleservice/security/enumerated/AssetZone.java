@@ -1,7 +1,7 @@
 package com.capstone.hodleservice.security.enumerated;
 
 public enum AssetZone {
-
+	World,
 	Afghanistan,
 	Albania,
 	Algeria,

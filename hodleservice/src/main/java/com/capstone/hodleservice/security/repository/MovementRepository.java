@@ -11,4 +11,6 @@ public interface MovementRepository extends JpaRepository<Movement, Long>{
 	List<Movement> findByUserId(Long userId);
 	
 	List<Movement> findByEndingWalletIdAndEndingAssetId(Long endingWalletId, Long endingAssetId);
+	
+	List<Movement> findByEndingWalletId (Long endingWalletId);
 }

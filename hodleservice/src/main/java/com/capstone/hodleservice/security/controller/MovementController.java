@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capstone.hodleservice.security.entity.Asset;
 import com.capstone.hodleservice.security.entity.Movement;
 import com.capstone.hodleservice.security.service.MovementService;
 
@@ -35,5 +38,28 @@ public class MovementController {
 		List<Movement> l = svc.findByUserId(userId);
 		ResponseEntity<List<Movement>> resp = new ResponseEntity<List<Movement>>(l, HttpStatus.OK);
 		return resp;
+	}
+	
+	@GetMapping("/bywallet/{id}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
+		List<Movement> l = svc.findByWalletId(walletId);
+		ResponseEntity<List<Movement>> resp = new ResponseEntity<List<Movement>>(l, HttpStatus.OK);
+		return resp;
+	}
+	
+	//POST METHODS
+	@PostMapping("/incoming/{userId}/{walletId}/{assetId}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addIncoming(@PathVariable Long userId,@PathVariable Long walletId,@PathVariable Long assetId,@RequestBody Double assetAmmount) {
+		Movement m = svc.addIncoming(userId, walletId, assetId, assetAmmount);
+	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/outgoing/{userId}/{walletId}/{assetId}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addOutgoing(@PathVariable Long userId,@PathVariable Long walletId,@PathVariable Long assetId,@RequestBody Double assetAmmount) {
+		Movement m = svc.addOutgoing(userId, walletId, assetId, assetAmmount);
+	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
 	}
 }

@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.hodleservice.security.entity.Asset;
+import com.capstone.hodleservice.security.entity.Todo;
 import com.capstone.hodleservice.security.service.AssetService;
 
 @RestController
@@ -28,12 +31,24 @@ public class AssetController {
 		ResponseEntity<Asset> resp = new ResponseEntity<Asset>(a, HttpStatus.OK);
 		return resp;
 	}
-	//GET METHODS
+	
 	@GetMapping("/bywallet/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
 		List<Asset> l = svc.findByWalletId(walletId);
 		ResponseEntity<List<Asset>> resp = new ResponseEntity<List<Asset>>(l, HttpStatus.OK);
 		return resp;
+	}
+	
+	//POST METHODS
+	@PostMapping("/add")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addAsset(@RequestBody Asset asset) {
+	     Asset a = svc.addAsset(asset.getWalletId(), asset.getName(), asset.getTicker(),
+	    		 			   asset.getAssetType(), asset.getAssetClass(), asset.getZone(),
+	    		 			   asset.getIssuer(), asset.getIntermediary(), asset.getAmount(),
+	    		 			   asset.getISIN(), asset.getTax(), asset.getExchange(), 
+	    		 			   asset.getMarketPrice(), asset.getAveragePurchasePrice(), asset.getPaidCommission());
+	     return new ResponseEntity<Asset>(a, HttpStatus.CREATED);
 	}
 }

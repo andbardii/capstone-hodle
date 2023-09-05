@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.hodleservice.security.entity.User;
-import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.service.UserService;
 
 @RestController
@@ -24,7 +23,23 @@ public class UserController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findById(@PathVariable Long id) {
 		User u = svc.findById(id);
-		ResponseEntity<Wallet> resp = new ResponseEntity<Wallet>(w, HttpStatus.OK);
+		ResponseEntity<User> resp = new ResponseEntity<User>(u, HttpStatus.OK);
+		return resp;
+	}
+	
+	@GetMapping("/byemail/{email}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> findByEmail(@PathVariable String email) {
+		User u = svc.findByEmail(email);
+		ResponseEntity<User> resp = new ResponseEntity<User>(u, HttpStatus.OK);
+		return resp;
+	}
+	
+	@GetMapping("/byusername/{username}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> findByUsername(@PathVariable String username) {
+		User u = svc.findByEmail(username);
+		ResponseEntity<User> resp = new ResponseEntity<User>(u, HttpStatus.OK);
 		return resp;
 	}
 }

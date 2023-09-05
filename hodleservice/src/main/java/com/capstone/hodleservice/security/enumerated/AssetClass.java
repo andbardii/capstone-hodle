@@ -5,6 +5,7 @@ public enum AssetClass {
 	FIAT,
 	STOCK,
 	BOND,
-	REALESTATE
+	REALESTATE,
+	CRYPTO
 
 }

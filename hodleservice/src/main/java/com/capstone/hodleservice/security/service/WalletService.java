@@ -23,12 +23,12 @@ public class WalletService {
 	@Autowired @Qualifier("wallet") private ObjectProvider<Wallet> provider;
 	
 	//POST METHODS
-	public Wallet addWallet(WalletType type, Long userId, Double value) {
+	public Wallet addWallet(WalletType type, Long userId) {
 
 			Wallet w = provider.getObject().builder()
 				    .walletType(type)
 				    .userId(userId)
-					.value(value)
+					.value(0.00)
 					.number(this.findByUserId(userId).size()+1l)
 					.build();
 			repo.save(w);
@@ -44,16 +44,23 @@ public class WalletService {
 		return w;
 	}
 	
-	public List<Wallet> findAll(){
-		List<Wallet> l = (List<Wallet>)repo.findAll();
-		l.forEach(c -> log.info(c.toString()));
-		return l;
-	}
-	
 	public List<Wallet> findByUserId(long id) {
 		List<Wallet> l = repo.findByUserId(id);
 		l.forEach(w -> w.toString());
 		return l;
+	}
+	
+	//PUT METHODS
+	public Wallet updateValue(boolean type, Long walletId, Double value) {
+		Wallet w = repo.findById(walletId).get();
+		if(type) {
+			w.setValue(w.getValue() + value);
+		}else {
+			w.setValue(w.getValue() - value);
+		}
+		
+		repo.save(w);
+		return w;
 	}
 	
 	//DELETE METHOD

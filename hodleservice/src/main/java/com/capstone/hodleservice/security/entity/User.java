@@ -10,6 +10,8 @@ import lombok.ToString;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.capstone.hodleservice.security.enumerated.CurrencyOptions;
+
 
 @Setter
 @Getter
@@ -26,6 +28,8 @@ public class User {
     private Long id;
     private String name;
     private Double exp;
+    @Enumerated(EnumType.STRING)
+    private CurrencyOptions currency;
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false, unique = true)

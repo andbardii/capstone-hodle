@@ -16,37 +16,44 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone.hodleservice.security.entity.Todo;
 import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.enumerated.WalletType;
-import com.capstone.hodleservice.security.service.WalletService;
+import com.capstone.hodleservice.security.service.TodoService;
 
 @RestController
-@RequestMapping("/api/wallet")
-public class WalletController {
+@RequestMapping("/api/todo")
+public class TodoController {
 
-	@Autowired WalletService svc;
+	@Autowired TodoService svc;
 	
 	//GET METHODS
 	@GetMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findById(@PathVariable Long id) {
-		Wallet w = svc.findById(id);
-		ResponseEntity<Wallet> resp = new ResponseEntity<Wallet>(w, HttpStatus.OK);
+		Todo t = svc.findById(id);
+		ResponseEntity<Todo> resp = new ResponseEntity<Todo>(t, HttpStatus.OK);
 		return resp;
 	}
 	
 	@GetMapping("/byuser/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByUserId(@PathVariable Long userId) {
-		List<Wallet> l = svc.findByUserId(userId);
-		ResponseEntity<List<Wallet>> resp = new ResponseEntity<List<Wallet>> (l, HttpStatus.OK);
+		List<Todo> l = svc.findByUserId(userId);
+		ResponseEntity<List<Todo>> resp = new ResponseEntity<List<Todo>> (l, HttpStatus.OK);
+		return resp;
+	}
+	
+	@GetMapping("/bystatus/{id}/{status}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> findByUserAndStatus(@PathVariable Long userId, @PathVariable boolean status) {
+		List<Todo> l = svc.findByUserAndStatus(userId, status);
+		ResponseEntity<List<Todo>> resp = new ResponseEntity<List<Todo>> (l, HttpStatus.OK);
 		return resp;
 	}
 	
 	//POST METHODS
-	@PostMapping("/add/{userId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> addWallet(@PathVariable Long userId, @RequestBody WalletType type) {
-        Wallet w = svc.addWallet(type, userId);
-        return new ResponseEntity<Wallet>(w, HttpStatus.CREATED);
-    }
-	
+	@PostMapping("/add")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addTodo(@RequestBody Todo todo) {
+	     Todo t = svc.addTodo(todo.getUserId(), todo.getTitle(), todo.getDescription());
+	     return new ResponseEntity<Todo>(t, HttpStatus.CREATED);
+	}
 }
