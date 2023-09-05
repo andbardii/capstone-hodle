@@ -55,8 +55,7 @@ public class MovementService {
 					.build();
 		repo.save(m);
 			
-		List<Movement> olderMovements = repo.findByEndingWalletIdAndEndingAssetId(walletId, assetId);
-		aSvc.addAmount(pp, assetId, assetAmmount, olderMovements);
+		aSvc.addAmount(pp, assetId, assetAmmount);
 		
 		wSvc.updateValue(true, walletId, (assetAmmount * pp));
 		
@@ -93,11 +92,31 @@ public class MovementService {
 		return m;
 	};
 	
-	public Movement addTransfer(Long userId) {
+	public Movement addTransfer(Long userId, 
+								Long startingWalletId, 
+								Long endingWalletId, 
+								Long assetId, 
+								Double assetAmmount) {
+		
+		Asset a = aSvc.findById(assetId);
+		
 		Movement m = provider.getObject().builder()
 				.movementType(MovementType.TRANSFER)
+				.number(repo.findByUserId(userId).size()+1l)
+				.userId(userId)
+				.startingWalletId(startingWalletId)
+				.endingWalletId(endingWalletId)
+				.startingAssetId(assetId)
+				.endingAssetId(assetId)
+				.startingAssetAmmount(assetAmmount)
+				.endingAssetAmmount(assetAmmount)
+				.purchasePrice(a.getAveragePurchasePrice())
+				.date(LocalDate.now())
 				.build();
 		repo.save(m);
+		
+		aSvc.transferAmount(startingWalletId, endingWalletId, assetId, assetAmmount, a.getAveragePurchasePrice());
+		
 		System.out.println();
 		log.info("Transfer movement Id: " + m.getId() + " added succesfully.");
 		return m;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.hodleservice.security.entity.Asset;
 import com.capstone.hodleservice.security.entity.Movement;
+import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.enumerated.AssetClass;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.AssetZone;
@@ -87,7 +88,7 @@ public class AssetService {
 	}
 	
 	//PUT METHODS
-	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount, List<Movement> olderMovements) {
+	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount) {
 		
 		Asset a = repo.findById(assetId).get();
 		
@@ -110,6 +111,7 @@ public class AssetService {
 
 		
 	}
+	
 	public Asset removeAmount(Long assetId, Double assetAmmount) {
 		Asset a = repo.findById(assetId).get();
 		a.setAmount(a.getAmount() - assetAmmount);
@@ -117,6 +119,41 @@ public class AssetService {
 		repo.save(a);
 		return a;
 	}
+	
+	public Asset transferAmount(Long startingWalletId, Long endingWalletId, 
+								Long assetId, Double assetAmmount, Double purchasePrice) {
+		
+		this.removeAmount(assetId, assetAmmount);
+		
+		Asset a = this.findById(assetId);
+		List<Asset> l = this.findByWalletId(endingWalletId);
+		
+		boolean exist = false;
+		Long asId = 0l;
+
+		for(Asset as : l) {
+			if(as.getTicker().equals(a.getTicker())) {
+				exist = true;
+				asId = as.getId();
+				this.addAmount(a.getAveragePurchasePrice(), as.getId(), assetAmmount);
+			}
+		};
+		
+		if(exist) {
+			Asset finalAs = this.findById(asId);
+			return finalAs;
+		}else{
+			Asset finalAs = this.addAsset(endingWalletId, a.getName(), 
+										  a.getTicker(), a.getAssetType(), 
+										  a.getAssetClass(), a.getZone(), 
+										  a.getIssuer(), a.getIntermediary(), 
+										  assetAmmount, a.getISIN(), 
+										  a.getTax(), a.getExchange(), 
+										  a.getMarketPrice(), purchasePrice, 0.00);
+			return finalAs;
+		}
+	}
+	
 	//DELETE METHODS
 	public void deleteAsset(Long id) {
 		repo.deleteById(id);

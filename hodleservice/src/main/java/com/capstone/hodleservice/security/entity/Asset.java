@@ -49,7 +49,6 @@ public class Asset {
 	private String intermediary;
 	private Double amount;
 	
-	@Column(unique = true)
     private String ISIN;
     
     private Double tax;

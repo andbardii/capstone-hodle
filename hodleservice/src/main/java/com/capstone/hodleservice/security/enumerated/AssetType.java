@@ -9,5 +9,5 @@ public enum AssetType {
 	BOND,
 	ETC,
 	ETN,
-	REIT,
+	REIT
 }

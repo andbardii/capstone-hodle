@@ -62,4 +62,5 @@ public class MovementController {
 		Movement m = svc.addOutgoing(userId, walletId, assetId, assetAmmount);
 	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
 	}
+	
 }
