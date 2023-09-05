@@ -1,5 +1,7 @@
 package com.capstone.hodleservice.security.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +29,6 @@ public class Todo {
 	private Long userId;	
 	private String title;
 	private String description;
+	private LocalDate date;
 	private boolean status;
 }

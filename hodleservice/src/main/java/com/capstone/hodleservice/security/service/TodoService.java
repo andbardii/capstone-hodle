@@ -1,5 +1,6 @@
 package com.capstone.hodleservice.security.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class TodoService {
 					.userId(userId)
 					.title(title)
 					.description(description)
+					.date(LocalDate.now())
 					.status(false)
 					.build();
 			repo.save(t);

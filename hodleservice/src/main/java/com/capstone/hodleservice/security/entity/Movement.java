@@ -1,5 +1,7 @@
 package com.capstone.hodleservice.security.entity;
 
+import java.time.LocalDate;
+
 import com.capstone.hodleservice.security.enumerated.AssetClass;
 import com.capstone.hodleservice.security.enumerated.AssetType;
 import com.capstone.hodleservice.security.enumerated.AssetZone;
@@ -49,5 +51,7 @@ public class Movement {
 	private Double endingAssetAmmount;
 	
 	private Double purchasePrice;
+	
+	private LocalDate date;
 
 }

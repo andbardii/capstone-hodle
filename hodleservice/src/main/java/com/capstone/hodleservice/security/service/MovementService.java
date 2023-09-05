@@ -1,5 +1,6 @@
 package com.capstone.hodleservice.security.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class MovementService {
 					.startingAssetAmmount(assetAmmount)
 					.endingAssetAmmount(assetAmmount)
 					.purchasePrice(pp)
+					.date(LocalDate.now())
 					.build();
 		repo.save(m);
 			
@@ -78,6 +80,7 @@ public class MovementService {
 				.endingAssetId(assetId)
 				.startingAssetAmmount(assetAmmount)
 				.endingAssetAmmount(assetAmmount)
+				.date(LocalDate.now())
 				.build();
 		repo.save(m);
 		aSvc.removeAmount(assetId, assetAmmount);

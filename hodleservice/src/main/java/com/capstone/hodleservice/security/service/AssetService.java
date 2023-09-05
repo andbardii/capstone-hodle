@@ -85,28 +85,29 @@ public class AssetService {
 		l.forEach(a -> a.toString());
 		return l;
 	}
+	
 	//PUT METHODS
 	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount, List<Movement> olderMovements) {
+		
 		Asset a = repo.findById(assetId).get();
-		a.setAmount(a.getAmount() + assetAmmount);
-		a.setMarketValue(a.getMarketPrice() * a.getAmount());
-		if(olderMovements.size() == 0) {
+		
+		if(a.getAveragePurchasePrice() == 0.00) {
 			a.setAveragePurchasePrice(purchasePrice);
+			a.setAmount(a.getAmount() + assetAmmount);
+			a.setMarketValue(a.getMarketPrice() * a.getAmount());
 			repo.save(a);
 			return a;
 		}else {
-			Double total = 0.00;
-			for(Movement m : olderMovements){
-				if(m.getMovementType().equals(MovementType.INCOMING) ||
-				   m.getMovementType().equals(MovementType.CONVERT) ||
-				   m.getMovementType().equals(MovementType.TRANSFER)) 
-				total += m.getPurchasePrice();
-			};
-			Double averagePurchasePrice = total/olderMovements.size();
+			Double total = (a.getAmount() * a.getAveragePurchasePrice())+(assetAmmount * purchasePrice);
+
+			Double averagePurchasePrice = total / (a.getAmount() + assetAmmount);
 			a.setAveragePurchasePrice(averagePurchasePrice);
+			a.setAmount(a.getAmount() + assetAmmount);
+			a.setMarketValue(a.getMarketPrice() * a.getAmount());
 			repo.save(a);
 			return a;
 		}
+
 		
 	}
 	public Asset removeAmount(Long assetId, Double assetAmmount) {
