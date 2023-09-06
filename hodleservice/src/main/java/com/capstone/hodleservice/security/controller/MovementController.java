@@ -51,15 +51,35 @@ public class MovementController {
 	//POST METHODS
 	@PostMapping("/incoming/{userId}/{walletId}/{assetId}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> addIncoming(@PathVariable Long userId,@PathVariable Long walletId,@PathVariable Long assetId,@RequestBody Double assetAmmount) {
+	public ResponseEntity<?> addIncoming(@PathVariable Long userId,@PathVariable Long walletId,
+										 @PathVariable Long assetId,@RequestBody Double assetAmmount) {
 		Movement m = svc.addIncoming(userId, walletId, assetId, assetAmmount);
 	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/outgoing/{userId}/{walletId}/{assetId}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> addOutgoing(@PathVariable Long userId,@PathVariable Long walletId,@PathVariable Long assetId,@RequestBody Double assetAmmount) {
+	public ResponseEntity<?> addOutgoing(@PathVariable Long userId,@PathVariable Long walletId,
+										 @PathVariable Long assetId,@RequestBody Double assetAmmount) {
 		Movement m = svc.addOutgoing(userId, walletId, assetId, assetAmmount);
+	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/transfer/{userId}/{startingWalletId}/{endingWalletId}/{assetId}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addTransfer(@PathVariable Long userId, @PathVariable Long startingWalletId, 
+										 @PathVariable Long endingWalletId, @PathVariable  Long assetId, 
+										 @RequestBody  Double assetAmmount) {
+		Movement m = svc.addTransfer(userId, startingWalletId, endingWalletId , assetId, assetAmmount);
+	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/convert/{userId}/{walletId}/{startingAssetId}/{startingAssetAmmount}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> addConvert(@PathVariable Long userId, @PathVariable Long walletId, 
+										@PathVariable Long startingAssetId, @RequestBody Asset endingAsset,
+										@PathVariable Double startingAssetAmmount) {
+		Movement m = svc.addConvert(userId, walletId, startingAssetId , endingAsset, startingAssetAmmount);
 	    return new ResponseEntity<Movement>(m, HttpStatus.CREATED);
 	}
 	

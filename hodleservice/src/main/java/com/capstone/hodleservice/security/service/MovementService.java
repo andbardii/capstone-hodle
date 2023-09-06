@@ -68,6 +68,13 @@ public class MovementService {
 								Long walletId, 
 								Long assetId, 
 								Double assetAmmount) {
+		
+		Asset a = aSvc.findById(assetId);
+		
+		if(assetAmmount > a.getAmount()) {
+			log.info("Ammount is not totally covered.");
+			return null;
+		}
 			
 		Movement m = provider.getObject().builder()
 				.movementType(MovementType.OUTGOING)
@@ -84,7 +91,6 @@ public class MovementService {
 		repo.save(m);
 		aSvc.removeAmount(assetId, assetAmmount);
 		
-		Asset a = aSvc.findById(assetId);
 		wSvc.updateValue(false, walletId, (assetAmmount * a.getMarketPrice()));
 		
 		System.out.println();
@@ -99,6 +105,10 @@ public class MovementService {
 								Double assetAmmount) {
 		
 		Asset a = aSvc.findById(assetId);
+		
+		if(assetAmmount > a.getAmount()) {
+			throw new Error("Ammount is not totally covered.");
+		}
 		
 		Movement m = provider.getObject().builder()
 				.movementType(MovementType.TRANSFER)
@@ -122,11 +132,57 @@ public class MovementService {
 		return m;
 	};
 	
-	public Movement addConvert(Long userId) {
+	public Movement addConvert(Long userId, 
+							   Long walletId,
+							   Long startingAssetId, 
+							   Asset endingAsset,
+							   Double startingAssetAmmount) {
+		
+		Asset endA;
+		Long endingAssetId;
+		Double endingAssetAmmount;
+		
+		Asset startA = aSvc.findById(startingAssetId);
+		Double value = startingAssetAmmount * startA.getMarketPrice();
+		
+		boolean exist = aSvc.existsByWalletIdAndTicker(walletId, endingAsset.getTicker());
+		if(startingAssetAmmount > startA.getAmount()) {
+			throw new Error("Ammount is not totally covered.");
+		}else if (exist) {
+			endA = aSvc.findByWalletIdAndTicker(walletId, endingAsset.getTicker());
+			endingAssetAmmount = value/endA.getMarketPrice();
+			endingAssetId = endA.getId();
+			
+			aSvc.addAmount(endA.getMarketPrice(), endingAssetId, endingAssetAmmount);
+			wSvc.updateValue(true, walletId, (endingAssetAmmount * endA.getMarketPrice()));
+			aSvc.removeAmount(startingAssetId, startingAssetAmmount);
+		}else {
+			endingAssetAmmount = value/endingAsset.getMarketPrice();
+			endA = aSvc.addAsset(walletId, endingAsset.getName(), endingAsset.getTicker(), 
+								 endingAsset.getAssetType(), endingAsset.getAssetClass(), 
+								 endingAsset.getZone(), endingAsset.getIssuer(), 
+								 endingAsset.getIntermediary(), endingAssetAmmount, endingAsset.getISIN(), 
+								 endingAsset.getTax(), endingAsset.getExchange(), 
+								 endingAsset.getMarketPrice(), endingAsset.getMarketPrice(), endingAsset.getPaidCommission());
+			endingAssetId = endA.getId();
+			aSvc.removeAmount(startingAssetId, startingAssetAmmount);
+		}
+		
 		Movement m = provider.getObject().builder()
 				.movementType(MovementType.CONVERT)
+				.number(repo.findByUserId(userId).size()+1l)
+				.userId(userId)
+				.startingWalletId(walletId)
+				.endingWalletId(walletId)
+				.startingAssetId(startingAssetId)
+				.endingAssetId(endingAssetId)
+				.startingAssetAmmount(startingAssetAmmount)
+				.endingAssetAmmount(endingAssetAmmount)
+				.purchasePrice(endA.getMarketPrice())
+				.date(LocalDate.now())
 				.build();
 		repo.save(m);
+		
 		System.out.println();
 		log.info("Convert movement Id: " + m.getId() + " added succesfully.");
 		return m;

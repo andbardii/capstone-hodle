@@ -87,6 +87,13 @@ public class AssetService {
 		return l;
 	}
 	
+	public Asset findByWalletIdAndTicker(long id, String ticker) {
+		Asset a = repo.findByWalletIdAndTicker(id, ticker);
+		log.info(a.toString());
+		return a;
+	}
+	
+	
 	//PUT METHODS
 	public Asset addAmount(Double purchasePrice, Long assetId, Double assetAmmount) {
 		
@@ -158,6 +165,12 @@ public class AssetService {
 	public void deleteAsset(Long id) {
 		repo.deleteById(id);
 		log.info("Asset" + id + "eliminato con successo");
+	}
+	
+	//OTHER METHODS
+	public boolean existsByWalletIdAndTicker(long id, String ticker) {
+		boolean exist = repo.existsByWalletIdAndTicker(id, ticker);
+		return exist;
 	}
 	
 }
