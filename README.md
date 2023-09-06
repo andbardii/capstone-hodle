@@ -2,5 +2,6 @@
 
 
 ### Built With
-This section map all the major frameworks/libraries used in the project.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.3.
+
 
