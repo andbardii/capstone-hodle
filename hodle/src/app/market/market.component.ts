@@ -1,20 +1,24 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MarketService } from '../services/market.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss']
 })
-export class MarketComponent {
+export class MarketComponent implements OnInit{
 
   @ViewChild('f') form!: NgForm;
   error: undefined | string;
 
   matches:any;
 
-  constructor(private svc: MarketService) {}
+  constructor(private svc: MarketService, private router: Router) {}
+
+  ngOnInit(): void {
+  }
 
   onSubmit() {
     if(this.form.value.keywords.trim() !== ''){

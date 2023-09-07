@@ -5,11 +5,13 @@ import { MarketRoutingModule } from './market-routing.module';
 import { MarketComponent } from './market.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MarketviewComponent } from './marketview/marketview.component';
 
 
 @NgModule({
   declarations: [
-    MarketComponent
+    MarketComponent,
+    MarketviewComponent
   ],
   imports: [
     CommonModule,
