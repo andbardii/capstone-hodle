@@ -1,0 +1,28 @@
+.row{
+justify-content: center;
+align-items: center;
+
+  h1{
+    font-size: 5rem;
+    font-weight: 900;
+    color: #167a4c;
+    margin-bottom: 0;
+  }
+  .slogan{
+    font-style: italic;
+  }
+  .auth{
+    display: flex;
+    align-items: center;
+  }
+  img{
+    max-width: 90%;
+  }
+  button{
+    &:hover{
+      font-weight: bold;
+      transform: scale(1.01);
+    }
+  }
+}
+

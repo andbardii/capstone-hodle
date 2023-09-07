@@ -1,0 +1,21 @@
+.col-12{
+  justify-content: center;
+  align-items: center;
+
+  h4{
+    font-weight: 900;
+  }
+
+button{
+  &:hover{
+    font-weight: bold;
+    transform: scale(1.01);
+  }
+}
+svg{
+  cursor:pointer;
+  &:hover{
+    transform: scale(1.1);
+  }
+}
+}

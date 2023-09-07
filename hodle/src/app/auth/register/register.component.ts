@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -7,4 +10,32 @@ import { Component } from '@angular/core';
 })
 export class RegisterComponent {
 
+  @ViewChild('f') form!: NgForm;
+  error: undefined | string;
+
+  constructor(private svc: AuthService, private router: Router) { }
+
+  ngOnInit(): void {
+  }
+
+  onSubmit() {
+    if(  this.form.value.username.trim() !== ''
+      && this.form.value.email.trim() !== ''
+      && this.form.value.password.trim() !== '') {
+        this.svc.signup(this.form.value).subscribe(
+          resp => {
+            console.log(resp);
+            this.error = undefined;
+          }, err => {
+            console.log(err.error.message);
+            this.error = err.error.message;
+            this.router.navigate(['/auth/login']);
+
+          }
+        );
+    } else {
+      this.error = 'Field Required';
+    }
+
+  }
 }
