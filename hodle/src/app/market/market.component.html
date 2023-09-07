@@ -10,7 +10,7 @@
     </div>
     <div class="col-9 h-100">
       <div class="row h-100">
-        <div class="col-12 h-25 p-4">
+        <div class="col-12 upmzone p-4">
           <form #f="ngForm" (ngSubmit)="onSubmit()">
             <div class="mb-3 d-flex">
               <input type="text" ngModel class="search" id="keywords"  name="keywords" placeholder="Search Asset" required />
@@ -22,8 +22,19 @@
             </div>
           </form>
         </div>
-        <div class="col-12 h-75">
-
+        <div class="results col-12">
+          <div class="row h-100 overflow-auto">
+            <div class="col-4 p-3" *ngFor="let asset of matches">
+              <div class="card asset">
+                <div class="card-body">
+                  <h4 class="card-title">{{asset['2. name']}}</h4>
+                  <h5 class="card-text ticker my-2"> {{asset['1. symbol']}}</h5>
+                  <p class="card-text mb-0"><b>Type:</b> {{asset['3. type']}}</p>
+                  <p class="card-text"><b>Zone:</b> {{asset['4. region']}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

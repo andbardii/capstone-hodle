@@ -12,12 +12,15 @@ export class MarketComponent {
   @ViewChild('f') form!: NgForm;
   error: undefined | string;
 
+  matches:any;
+
   constructor(private svc: MarketService) {}
 
   onSubmit() {
     if(this.form.value.keywords.trim() !== ''){
       this.svc.searchAsset(this.form.value).subscribe((data) => {
-            console.log(data);
+            console.log(Object.values(data)[0]);
+            this.matches = Object.values(data)[0];
             this.error = undefined;
       },
       (err) => {
