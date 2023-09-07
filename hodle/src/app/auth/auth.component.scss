@@ -16,7 +16,8 @@ align-items: center;
     align-items: center;
   }
   img{
-    max-width: 90%;
+    width: 90%;
+    box-sizing: border-box;
   }
   button{
     &:hover{
