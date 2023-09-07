@@ -1,0 +1,27 @@
+.watch{
+  background-color: #10583683;
+  border: 0;
+  border-radius: 35px;
+  color: #ffffff;
+
+  h4{
+    font-weight: 900;
+  }
+}
+form{
+  .search{
+      outline-color: #198753;
+      border-style: solid;
+      border: 2px, solid, lightgray;
+      padding: 10px;
+      border-radius: 50px;
+      width: 70%;
+
+  }
+  button{
+    border-radius: 50px;
+    &:active{
+      box-shadow:0 0 10px #198753;
+    }
+  }
+}

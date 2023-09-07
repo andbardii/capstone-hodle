@@ -1,1 +1,31 @@
-<p>market works!</p>
+<div class="col-12 h-100 w-100 m-0">
+  <div class="row m-0 h-100">
+    <div class="col-3 bg-success h-100 p-4">
+      <div class="card p-2 watch">
+        <div class="card-body">
+          <h4 class="card-title">WATCHLIST</h4>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-9 h-100">
+      <div class="row h-100">
+        <div class="col-12 h-25 p-4">
+          <form #f="ngForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3 d-flex">
+              <input type="text" ngModel class="search" id="keywords"  name="keywords" placeholder="Search Asset" required />
+              <button class="btn btn-success" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-12 h-75">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

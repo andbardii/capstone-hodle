@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: 'wallet', loadChildren: () => import('./wallet/wallet.module').then(m => m.WalletModule), canActivate: [AuthGuard] },
   { path: 'market', loadChildren: () => import('./market/market.module').then(m => m.MarketModule), canActivate: [AuthGuard] },
   { path: 'todos', loadChildren: () => import('./todos/todos.module').then(m => m.TodosModule), canActivate: [AuthGuard] },
-  { path: 'data', loadChildren: () => import('./data/data.module').then(m => m.DataModule), canActivate: [AuthGuard] }
+  { path: 'data', loadChildren: () => import('./data/data.module').then(m => m.DataModule), canActivate: [AuthGuard] },
+  { path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule) }
 ];
 
 @NgModule({
