@@ -14,14 +14,18 @@
           <h1 class="name">{{asset['2. Symbol']}}</h1>
         </div>
         <div class="col-4 p-3">
-           <!-- {{values['2023-09-06']['4. close']}} € -->
+          <h1>{{values[yesterday]['4. close'] | number: '1.2-2'}}$</h1>
         </div>
         <div class="col-4 p-3">
-           <!-- {{((values['2023-09-06']['4. close'] - values['2023-09-06']['1. open'])*100)/ values['2023-09-06']['1. open']}}% -->
+          <div class="change p-3" [style.background-color]="((values[yesterday]['4. close']-values[yesterday]['1. open'])*100)/values[yesterday]['1. open'] | togpercent">
+            <h2 class="text-light m-0">{{((values[yesterday]['4. close']-values[yesterday]['1. open'])*100)/values[yesterday]['1. open'] | number: '1.2-2'}}%</h2>
+          </div>
         </div>
       </div>
       <div class="row h-75">
-
+        <div class="col-12 h-100 p-3">
+          <canvas id="assetchart"></canvas>
+        </div>
       </div>
     </div>
   </div>

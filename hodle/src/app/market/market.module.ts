@@ -6,12 +6,14 @@ import { MarketComponent } from './market.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MarketviewComponent } from './marketview/marketview.component';
+import { TogpercentPipe } from '../pipes/togpercent.pipe';
 
 
 @NgModule({
   declarations: [
     MarketComponent,
-    MarketviewComponent
+    MarketviewComponent,
+    TogpercentPipe
   ],
   imports: [
     CommonModule,

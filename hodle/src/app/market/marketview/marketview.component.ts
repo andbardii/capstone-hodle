@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MarketService } from 'src/app/services/market.service';
+import { Chart, registerables } from 'chart.js';
+import { formatDate } from '@angular/common';
+Chart.register(...registerables)
 
 @Component({
   selector: 'app-marketview',
@@ -12,27 +15,95 @@ export class MarketviewComponent implements OnInit{
   asset:any;
   values:any;
 
+  labels:any;
+  datas:any;
+  high:any;
+  low:any;
+
+  yesterday:string = '';
+
   constructor(private svc: MarketService, private route:ActivatedRoute){}
 
   ngOnInit(): void {
-    this.getChartData()
+    this.getMarketDailyData();
   }
 
-  getChartData(){
+  getMarketDailyData(){
     this.route.params
-  .subscribe((params:any)=>{
+    .subscribe((params:any)=>{
       console.log(params)
       this.svc.getMarketDailyView(params).subscribe(
           (data) => {
           console.log(Object.values(data)[0])
-          console.log(Object.values(data)[1])
-
-          this.asset = Object.values(data)[0];
+          this.asset = Object.values(data)[0]
           this.values = Object.values(data)[1];
+          this.getData();
           },
           (err) => {
           console.log(err.error.message);
       })
     })
   }
+
+  getMarketIntradayData(interval: number){
+    this.route.params
+    .subscribe((params:any)=>{
+      console.log(params)
+      this.svc.getMarketIntradayView(params, interval).subscribe(
+          (data) => {
+          console.log(data)
+          this.getData();
+          },
+          (err) => {
+          console.log(err.error.message);
+      })
+    })
+  }
+
+  renderChart(){
+    const chart = new Chart("assetchart", {
+      type: 'line',
+      data: {
+        labels: this.labels,
+        datasets: [{
+          label: 'prova',
+          data: this.datas,
+          fill: false,
+          borderColor: '#167a4c',
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
+  }
+
+
+  getData(){
+
+    const labelsd = [];
+    const datasd = [];
+    const highd = [];
+    const lowd = [];
+
+    let lastkey: string = '';
+
+    for (const key in this.values) {
+      labelsd.push(key);
+      datasd.push(this.values[key]['4. close']);
+      highd.push(this.values[key]['2. close']);
+      lowd.push(this.values[key]['3. close']);
+      lastkey = key;
+    }
+    this.yesterday = lastkey;
+    this.labels = labelsd.reverse();
+    this.datas = datasd.reverse();
+    this.renderChart();
+  }
+
 }
