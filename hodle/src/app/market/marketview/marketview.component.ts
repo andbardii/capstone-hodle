@@ -62,16 +62,30 @@ export class MarketviewComponent implements OnInit{
 
   renderChart(){
     const chart = new Chart("assetchart", {
-      type: 'line',
       data: {
-        labels: this.labels,
-        datasets: [{
-          label: 'prova',
+        datasets: [
+        {
+          type: 'line',
+          label: 'low',
+          data: this.low,
+          borderColor: '#FF0100',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'price',
           data: this.datas,
-          fill: false,
+          borderColor: '#cccccc',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'high',
+          data: this.high,
           borderColor: '#167a4c',
           tension: 0.1
-        }]
+        }],
+      labels: this.labels
       },
       options: {
         scales: {
@@ -96,11 +110,13 @@ export class MarketviewComponent implements OnInit{
     for (const key in this.values) {
       labelsd.push(key);
       datasd.push(this.values[key]['4. close']);
-      highd.push(this.values[key]['2. close']);
-      lowd.push(this.values[key]['3. close']);
+      highd.push(this.values[key]['2. high']);
+      lowd.push(this.values[key]['3. low']);
       lastkey = key;
     }
     this.yesterday = lastkey;
+    this.low = lowd.reverse();
+    this.high = highd.reverse();
     this.labels = labelsd.reverse();
     this.datas = datasd.reverse();
     this.renderChart();
