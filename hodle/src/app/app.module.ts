@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
   declarations: [
     AppComponent,
     NavComponent
-  ],
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

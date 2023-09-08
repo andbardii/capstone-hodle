@@ -9,7 +9,7 @@ export class UserService {
 
   headers = new HttpHeaders();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   getToken(): string {
     const user = localStorage.getItem('user');
@@ -20,7 +20,6 @@ export class UserService {
       return '';
     }
   }
-
   getUsername(): string {
     const user = localStorage.getItem('user');
     if (user) {
@@ -30,15 +29,41 @@ export class UserService {
       return '';
     }
   }
-
-  getByUsername(username:String) {
-    this.headers = this.headers.set(
-      'Authorization',
-      'Bearer ' + this.getToken()
-    );
-    return this.http.get<Cliente>('http://localhost:8080/api/clienti/'+ id, {
-      headers: this.headers
-    });
+  getId(): number {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.userId;
+    } else {
+      return 0;
+    }
+  }
+  getName(): string {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.name;
+    } else {
+      return '';
+    }
+  }
+  getEmail(): string {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.email;
+    } else {
+      return '';
+    }
+  }
+  getExp(): number {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.exp;
+    } else {
+      return 0;
+    }
   }
 
 }

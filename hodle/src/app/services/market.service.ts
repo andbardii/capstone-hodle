@@ -10,7 +10,7 @@ export class MarketService {
 
   headers = new HttpHeaders();
 
-  constructor(private http: HttpClient, private router: Router){}
+  constructor(private http: HttpClient){}
 
   searchAsset(keywords: string) {
       console.log(keywords);
