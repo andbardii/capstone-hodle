@@ -20,7 +20,7 @@ import com.capstone.hodleservice.security.enumerated.WalletType;
 import com.capstone.hodleservice.security.service.WalletService;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="*", maxAge = 3600)
 @RequestMapping("/api/wallet")
 public class WalletController {
 
@@ -35,7 +35,7 @@ public class WalletController {
 		return resp;
 	}
 	
-	@GetMapping("/byuser/{id}")
+	@GetMapping("/byuser/{userId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByUserId(@PathVariable Long userId) {
 		List<Wallet> l = svc.findByUserId(userId);
@@ -44,7 +44,7 @@ public class WalletController {
 	}
 	
 	//POST METHODS
-	@PostMapping("/add/{userId}")
+	@PostMapping("/add/{userId}/{type}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> addWallet(@PathVariable Long userId, @PathVariable WalletType type) {
         Wallet w = svc.addWallet(type, userId);

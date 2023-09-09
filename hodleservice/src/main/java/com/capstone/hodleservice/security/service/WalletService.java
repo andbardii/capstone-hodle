@@ -29,7 +29,6 @@ public class WalletService {
 				    .walletType(type)
 				    .userId(userId)
 					.value(0.00)
-					.number(this.findByUserId(userId).size()+1l)
 					.build();
 			repo.save(w);
 			System.out.println();

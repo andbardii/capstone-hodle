@@ -1,42 +1,230 @@
 <div class="col-12 h-100 w-100 m-0">
-  <div class="row m-0 h-100">
+  <div class="row m-0 h-100" *ngIf="needwallet == false && postwallet == false && postasset == false && postmove == false">
     <div class="col-3 bg-success h-100 p-4">
       <div class="row h-100">
         <div class="col-12 h-25 wimg">
-          <a class="move"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+          <a class="move"  (click)="back()"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
           </svg></a>
           <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="#ffffff" class="bi bi-wallet2" viewBox="0 0 16 16">
             <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
           </svg>
-          <a class="move"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+          <a class="move"  (click)="move()" ><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
           </svg></a>
         </div>
 
         <div class="col-12 h-25">
-          P
+          {{wallets[windex].value}}
         </div>
         <div class="col-12 h-25">
-          P
+          {{wallets[windex].walletType}}
         </div>
         <div class="col-12 h-25 add">
-         <form #f="ngForm" (ngSubmit)="onSubmit()">
           <div class="d-grid gap-2 mb-3">
-            <button class="btn btn-light" type="submit"><b>ADD WALLET</b></button>
+            <button class="btn btn-light" (click)="postwallet = true"><b>ADD WALLET</b></button>
           </div>
-            <select ngModel class="form-select" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
-              <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
-              <option value="CONTO_TITOLI">CONTO TITOLI</option>
-              <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
-              <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
-            </select>
-        </form>
+          <div class="d-grid gap-2 mb-3">
+            <button class="btn btn-light" (click)="postasset = true"><b>ADD ASSET</b></button>
+          </div>
         </div>
       </div>
     </div>
     <div class="col-9 h-100">
 
+    </div>
+  </div>
+  <div class="row m-0 h-100" *ngIf="needwallet == true">
+    <div class="col-12 h-100 p-5 box">
+      <div class="card needw">
+        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="#198753" class="bi bi-wallet2" viewBox="0 0 16 16">
+          <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+        </svg>
+        <div class="card-body">
+          <h4 class="card-title"><b>CREATE YOUR FIRST WALLET!</b></h4>
+          <p class="card-text">Start enjoying the benefits of good fund management.</p>
+          <div class="mt-2">
+            <form #f="ngForm" (ngSubmit)="onSubmit()">
+              <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+              </div>
+                <select ngModel class="form-select" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                  <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
+                  <option value="CONTO_TITOLI">CONTO TITOLI</option>
+                  <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
+                  <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
+                </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row m-0 h-100" *ngIf="postwallet == true">
+    <div class="col-12 h-100 p-5 box">
+      <div class="card needw">
+        <div class="w-100 back">
+          <svg (click)="postwallet = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
+          </svg>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="#198753" class="bi bi-wallet2" viewBox="0 0 16 16">
+          <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+        </svg>
+        <div class="card-body">
+          <h4 class="card-title"><b>CREATE WALLET</b></h4>
+          <div class="mt-2">
+            <form #f="ngForm" (ngSubmit)="onSubmit()">
+              <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+              </div>
+                <select ngModel class="form-select" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                  <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
+                  <option value="CONTO_TITOLI">CONTO TITOLI</option>
+                  <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
+                  <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
+                </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row m-0 h-100" *ngIf="postasset == true">
+    <div class="col-12 h-100 p-2 box">
+      <div class="card needw">
+        <div class="w-100 back ">
+          <svg (click)="postasset = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
+          </svg>
+        </div>
+        <div class="w-75">
+          <h4 class="card-title text-center mb-1"><b>ADD ASSET</b></h4>
+          <form #s="ngForm" (ngSubmit)="onSearch()">
+            <div class="mb-1 d-flex">
+              <input type="text" ngModel class="form-control search" id="keywords"  name="keywords" placeholder="Search Asset..." required />
+              <button class="btn btn-success" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+          <div class="match my-1 overflow-auto">
+            <div class="card p-1" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
+              <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
+              <p class="m-0">Zone: {{asset['4. region']}}</p>
+              <p class="m-0">Type: {{asset['3. type']}}</p>
+            </div>
+          </div>
+          <div>
+            <form #a="ngForm" (ngSubmit)="onSubmitAsset()">
+              <div class="mb-1">
+                <input type="text" [(ngModel)]="asset.name" class="form-control" id="name" name="name" placeholder="Asset Name" readonly />
+              </div>
+              <div class="mb-1">
+                <input type="text" [(ngModel)]="asset.ticker" class="form-control" id="ticker" name="ticker" placeholder="Asset Ticker" readonly />
+              </div>
+              <div class="mb-1">
+                <input type="number" [(ngModel)]="asset.marketPrice" class="d-none" id="marketPrice" name="marketPrice" placeholder="Market Price" readonly />
+              </div>
+              <div class="mb-1">
+                <input type="text" ngModel class="form-control" id="ISIN" name="ISIN" placeholder="Asset ISIN" required />
+              </div>
+              <div class="mb-1">
+                <select ngModel class="form-select" aria-label="zone" placeholder="Enter Asset Zone..." id="zone" name="zone" required>
+                  <option value="World">World</option>
+                  <option value="Argentina">Argentina</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Belgium">Belgium</option>
+                  <option value="Brazil">Brazil</option>
+                  <option value="Bulgaria">Bulgaria</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Central_African_Republic">Central African Republic</option>
+                  <option value="China">China</option>
+                  <option value="Czech_Republic">Czech Republic</option>
+                  <option value="Denmark">Denmark</option>
+                  <option value="France">France</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Greece">Greece</option>
+                  <option value="Iceland">Iceland</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="India">India</option>
+                  <option value="Ireland">Ireland</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Japan">Japan</option>
+                  <option value="Luxembourg">Luxembourg</option>
+                  <option value="Monaco">Monaco</option>
+                  <option value="Montenegro">Montenegro</option>
+                  <option value="Netherlands">Netherlands</option>
+                  <option value="New_Zealand">New Zealand</option>
+                  <option value="Poland">Poland</option>
+                  <option value="Qatar">Qatar</option>
+                  <option value="Portugal">Portugal</option>
+                  <option value="Russia">Russia</option>
+                  <option value="Saudi_Arabia">Saudi Arabia</option>
+                  <option value="South_Africa">South Africa</option>
+                  <option value="South Korea">South Korea</option>
+                  <option value="Switzerland">Switzerland</option>
+                  <option value="Ukraine">Ukraine</option>
+                  <option value="United_Arab_Emirates">United Arab Emirates</option>
+                  <option value="United_Kingdom">United Kingdom</option>
+                  <option value="United_States_of_America">United States of America</option>
+                </select>
+              </div>
+              <div class="mb-1">
+                <select ngModel class="form-select" aria-label="assetType" placeholder="Enter Asset Type..." id="assetType" name="assetType" required>
+                  <option value="FIAT">FIAT</option>
+                  <option value="STOCK">Equity</option>
+                  <option value="ETF">ETF</option>
+                  <option value="CRYPTO">Crypto</option>
+                  <option value="BOND">Bond</option>
+                  <option value="ETC">ETC</option>
+                  <option value="ETN">ETN</option>
+                  <option value="REIT">REIT</option>
+                </select>
+              </div>
+              <div class="mb-1">
+                <select ngModel class="form-select" aria-label="assetClass" placeholder="Enter Asset Class..." id="assetClass" name="assetClass" required>
+                  <option value="FIAT">FIAT</option>
+                  <option value="STOCK">Equity</option>
+                  <option value="CRYPTO">Crypto</option>
+                  <option value="BOND">Bond</option>
+                  <option value="REALESTATE">Realestate</option>
+                </select>
+              </div>
+              <div class="mb-1">
+                <input type="number" ngModel class="form-control" id="amount" name="amount" placeholder="Asset Amount" required />
+              </div>
+              <div class="mb-1">
+                <input type="number" ngModel class="form-control" id="tax" name="tax" placeholder="Applicable taxes" required />
+              </div>
+              <div class="mb-1">
+                <input type="number" ngModel class="form-control" id="paidCommission" name="paidCommission" placeholder="Paid Commissions" required />
+              </div>
+              <div class="mb-1">
+                <input type="number" ngModel class="form-control" id="averagePurchasePrice" name="averagePurchasePrice" placeholder="Average Purchase Price" required />
+              </div>
+              <div class="mb-1">
+                <input type="text" ngModel class="form-control" id="issuer" name="issuer" placeholder="Issuer of the Asset" required />
+              </div>
+              <div class="mb-1">
+                <input type="text" ngModel class="form-control" id="exchange" name="exchange" placeholder="Reference Exchange" required />
+              </div>
+              <div class="mb-1">
+                <input type="text" ngModel class="form-control" id="intermediary" name="intermediary" placeholder="Your Intermediary" required />
+              </div>
+              <div class="mb-1">
+                <input type="number" [(ngModel)]="asset.walletId" class="d-none" id="walletId" name="walletId" placeholder="Your Wallet Id" readonly />
+              </div>
+                <div class="d-grid gap-2 mb-1">
+                  <button class="btn btn-success" type="submit"><b>ADD ASSET</b></button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

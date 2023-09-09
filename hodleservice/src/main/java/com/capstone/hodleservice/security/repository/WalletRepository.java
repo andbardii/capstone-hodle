@@ -9,5 +9,4 @@ import com.capstone.hodleservice.security.entity.Wallet;
 public interface WalletRepository extends JpaRepository<Wallet, Long>{
 	
 	List<Wallet> findByUserId(Long userId);
-
 }

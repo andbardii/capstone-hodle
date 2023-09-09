@@ -14,7 +14,7 @@ import com.capstone.hodleservice.security.entity.User;
 import com.capstone.hodleservice.security.service.UserService;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="*", maxAge = 3600)
 @RequestMapping("/api/user")
 public class UserController {
 	
