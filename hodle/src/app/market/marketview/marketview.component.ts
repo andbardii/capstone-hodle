@@ -122,4 +122,6 @@ export class MarketviewComponent implements OnInit{
     this.renderChart();
   }
 
+  like(arg0: any) {
+  }
 }

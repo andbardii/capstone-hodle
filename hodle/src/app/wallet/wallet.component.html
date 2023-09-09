@@ -1,21 +1,21 @@
 <div class="col-12 h-100 w-100 m-0">
-  <div class="row m-0 h-100" *ngIf="needwallet == false && postwallet == false && postasset == false && postmove == false">
+  <div class="row m-0 h-100" *ngIf="needwallet == false && postwallet == false && postasset == false && postmove == false && movement == false">
     <div class="col-3 bg-success h-100 p-4">
       <div class="row h-100">
         <div class="col-12 h-25 wimg">
-          <a class="move"  (click)="back()"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+          <a class="move" (click)="back()"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
           </svg></a>
           <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="#ffffff" class="bi bi-wallet2" viewBox="0 0 16 16">
             <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
           </svg>
-          <a class="move"  (click)="move()" ><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+          <a class="move" (click)="move()" ><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#ffffff" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
           </svg></a>
         </div>
 
         <div class="col-12 h-25">
-          {{wallets[windex].value}}
+          {{wallets[windex].value | number: '1.2-2' }}
         </div>
         <div class="col-12 h-25">
           {{wallets[windex].walletType}}
@@ -27,11 +27,30 @@
           <div class="d-grid gap-2 mb-3">
             <button class="btn btn-light" (click)="postasset = true"><b>ADD ASSET</b></button>
           </div>
+          <div class="d-grid gap-2 mb-3">
+            <button class="btn btn-light" (click)="movement = true"><b>MOVE YOUR FUNDS</b></button>
+          </div>
         </div>
       </div>
     </div>
     <div class="col-9 h-100">
+      <div class="row h-100">
+        <div class="col-8 p-3 h-100">
+          <div class="card h-100">
 
+          </div>
+        </div>
+        <div class="col-4 p-3 h-100">
+          <div class="card row h-100">
+            <div class="col-12" *ngFor="let asset of assets">
+              <div class="row p-2">
+                <div class="col-6"><b>{{asset.ticker}}</b></div>
+                <div class="col-6">{{asset.marketValue | number: '1.2-2'}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row m-0 h-100" *ngIf="needwallet == true">
@@ -220,6 +239,37 @@
               </div>
                 <div class="d-grid gap-2 mb-1">
                   <button class="btn btn-success" type="submit"><b>ADD ASSET</b></button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row m-0 h-100" *ngIf="movement == true">
+    <div class="col-12 h-100 p-5 box">
+      <div class="card needw">
+        <div class="w-100 back">
+          <svg (click)="postwallet = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title"><b>CREATE WALLET</b></h4>
+          <div class="mt-2">
+            <form #m="ngForm" (ngSubmit)="onMovementSubmit()">
+              <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-success" type="submit"><b>MOVE YOUR FUNDS</b></button>
+              </div>
+                <select ngModel class="form-select" aria-label="movementType" placeholder="Enter the type of this movement..." id="movementType" name="movementType" required>
+                  <option value="INCOMING">INCOMING</option>
+                  <option value="OUTGOING">OUTGOING</option>
+                  <option value="TRANSFER">TRANSFER</option>
+                  <option value="CONVERT">CONVERT</option>
+                </select>
+
+                <div class="mb-1">
+                  <input type="number" [(ngModel)]="mov.movementType" class="form-control" id="marketPrice" name="marketPrice" placeholder="Market Price" readonly />
                 </div>
             </form>
           </div>

@@ -5,6 +5,8 @@ import { WalletService } from '../services/wallet.service';
 import { NgForm } from '@angular/forms';
 import { Wallet } from '../interfaces/wallet';
 import { Asset } from '../interfaces/asset';
+import { Movement } from '../interfaces/movement';
+import { MovementService } from '../services/movement.service';
 
 @Component({
   selector: 'app-wallet',
@@ -16,6 +18,7 @@ export class WalletComponent implements OnInit {
   @ViewChild('f') form!: NgForm;
   @ViewChild('s') sform!: NgForm;
   @ViewChild('a') aform!: NgForm;
+  @ViewChild('m') mform!: NgForm;
   error: undefined | string;
 
   wallets: Wallet[] = [];
@@ -27,9 +30,14 @@ export class WalletComponent implements OnInit {
   postmove: boolean = false;
   matches: any;
 
-  asset: Asset = {};
+  movement: boolean = false;
+  mov:Movement = {};
 
-  constructor(private asvc: AssetService, private msvc: MarketService, private svc: WalletService){}
+  asset: Asset = {};
+  assets: Asset[] = [];;
+
+  constructor(private asvc: AssetService, private msvc: MarketService,
+              private svc: WalletService, private mosvc: MovementService){}
 
   ngOnInit(): void {
     this.findByUser();
@@ -45,6 +53,7 @@ export class WalletComponent implements OnInit {
             this.needwallet = false;
             this.postwallet = false;
             this.findByUser();
+            this.form.reset();
           }, (err) => {
             console.log(err.error.message);
             this.error = err.error.message;
@@ -61,6 +70,7 @@ export class WalletComponent implements OnInit {
             console.log(Object.values(data)[0]);
             this.matches = Object.values(data)[0];
             this.error = undefined;
+            this.sform.reset();
       },
       (err) => {
         console.log(err.error.message);
@@ -79,6 +89,7 @@ export class WalletComponent implements OnInit {
                   this.error = undefined;
                   this.postasset = false;
                   this.findByUser();
+                  this.aform.reset();
                 }, (err) => {
                   console.log(err.error.message);
                   this.error = err.error.message;
@@ -94,6 +105,7 @@ export class WalletComponent implements OnInit {
         if(this.wallets.length == 0){
           this.needwallet = true;
         }
+        this.findAssetsByWalletId();
         this.error = undefined;
       }, (err) => {
         console.log(err.error.message);
@@ -107,6 +119,7 @@ export class WalletComponent implements OnInit {
       return;
     }else{
       this.windex = this.windex - 1;
+      this.findAssetsByWalletId();
     }
   }
 
@@ -115,6 +128,7 @@ export class WalletComponent implements OnInit {
       return;
     }else{
       this.windex = this.windex + 1;
+      this.findAssetsByWalletId();
     }
   }
 
@@ -134,5 +148,21 @@ export class WalletComponent implements OnInit {
     this.asset.name = asset['2. name']
     this.asset.ticker = asset['1. symbol']
     this.asset.walletId = this.wallets[this.windex].id
+  }
+
+  findAssetsByWalletId(){
+    this.asvc.findByWalletId(this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        this.assets = resp;
+        console.log(this.assets);
+        this.error = undefined;
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+
+  onMovementSubmit() {
   }
 }

@@ -34,7 +34,7 @@ public class AssetController {
 		return resp;
 	}
 	
-	@GetMapping("/bywallet/{id}")
+	@GetMapping("/bywallet/{walletId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
 		List<Asset> l = svc.findByWalletId(walletId);

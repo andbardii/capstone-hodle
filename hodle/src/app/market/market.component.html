@@ -1,6 +1,6 @@
 <div class="col-12 h-100 w-100 m-0">
   <div class="row m-0 h-100">
-    <div class="col-3 bg-success h-100 p-4">
+    <div class="d-none d-lg-inline col-lg-3 bg-success h-100 p-4">
       <div class="card p-2 watch">
         <div class="card-body">
           <h4 class="card-title">WATCHLIST</h4>
@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <div class="col-9 h-100">
+    <div class="col-12 col-lg-9 h-100">
       <div class="row h-100">
         <div class="col-12 upmzone p-4">
           <form #f="ngForm" (ngSubmit)="onSubmit()">
@@ -24,12 +24,11 @@
         </div>
         <div class="results col-12">
           <div class="row h-100 overflow-auto">
-            <div class="col-4 p-3" *ngFor="let asset of matches">
+            <div class="col-6 p-3" *ngFor="let asset of matches">
               <div class="card asset" [routerLink]="['marketview/' + asset['1. symbol']]">
                 <div class="card-body">
-                  <h4 class="card-title">{{asset['2. name']}}</h4>
-                  <h5 class="card-text ticker my-2"> {{asset['1. symbol']}}</h5>
-                  <p class="card-text mb-0"><b>Type:</b> {{asset['3. type']}}</p>
+                  <h4 class="card-title"><b class="ticker">{{asset['1. symbol']}}</b> ({{asset['2. name']}} )</h4>
+                  <p class="card-text m-0"><b>Type:</b> {{asset['3. type']}}</p>
                   <p class="card-text"><b>Zone:</b> {{asset['4. region']}}</p>
                 </div>
               </div>
