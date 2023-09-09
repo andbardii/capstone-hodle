@@ -8,3 +8,19 @@
     font-weight: 900;
   }
 }
+.szone{
+  .logout{
+    border-radius: 35px;
+    padding: 2%;
+    display: flex;
+    justify-content: center;
+    &:hover{
+      background-color: darkred;
+      color: whitesmoke;
+      font-weight: 900;
+    }
+    &:active{
+      transform: scale(1.01);
+    }
+  }
+}

@@ -67,7 +67,7 @@ public class AssetService {
 					.build();
 			repo.save(a);
 
-			wSvc.updateValue(true, walletId,(Double)(marketPrice * amount));
+			wSvc.updateValue(walletId,this.findByWalletId(walletId));
 			
 			System.out.println();
 			log.info("Asset Id: " + a.getId() + " aggiunto correttamente.");
@@ -104,6 +104,7 @@ public class AssetService {
 			a.setAmount(a.getAmount() + assetAmmount);
 			a.setMarketValue(a.getMarketPrice() * a.getAmount());
 			repo.save(a);
+			wSvc.updateValue(a.getWalletId(),this.findByWalletId(a.getWalletId()));
 			return a;
 		}else {
 			Double total = (a.getAmount() * a.getAveragePurchasePrice())+(assetAmmount * purchasePrice);
@@ -113,8 +114,10 @@ public class AssetService {
 			a.setAmount(a.getAmount() + assetAmmount);
 			a.setMarketValue(a.getMarketPrice() * a.getAmount());
 			repo.save(a);
+			wSvc.updateValue(a.getWalletId(),this.findByWalletId(a.getWalletId()));
 			return a;
 		}
+		
 
 		
 	}
@@ -124,6 +127,7 @@ public class AssetService {
 		a.setAmount(a.getAmount() - assetAmmount);
 		a.setMarketValue(a.getMarketPrice() * a.getAmount());
 		repo.save(a);
+		wSvc.updateValue(a.getWalletId(),this.findByWalletId(a.getWalletId()));
 		return a;
 	}
 	
@@ -159,6 +163,13 @@ public class AssetService {
 										  a.getMarketPrice(), purchasePrice, 0.00);
 			return finalAs;
 		}
+	}
+	
+	public Asset updateMarketPrice(Long assetId, Double newMarketPrice) {
+		Asset a = repo.findById(assetId).get();
+		a.setMarketPrice(newMarketPrice);
+		repo.save(a);
+		return a;
 	}
 	
 	//DELETE METHODS

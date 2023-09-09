@@ -11,6 +11,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  // LOCAL USER METHODS
   getToken(): string {
     const user = localStorage.getItem('user');
     if (user) {

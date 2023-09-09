@@ -40,3 +40,26 @@
     }
   }
 }
+.sub{
+  font-style: italic;
+  font-weight: 300;
+  font-size: smaller;
+}
+.val{
+  background-color: #10583683;
+  border: 0;
+  border-radius: 35px;
+  color: #ffffff;
+}
+.add{
+  .btn{
+    background-color:#ffffff ;
+    border: 0;
+    border-radius: 35px;
+    color: #105836;
+    &:hover{
+      background-color:#105836;
+      color: #ffffff;
+    }
+  }
+}

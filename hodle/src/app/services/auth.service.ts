@@ -22,7 +22,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {
     this.restoreUser();
   }
-
+  // POST METHODS
   signup(user: Registerdata) {
     console.log(user);
     return this.http.post('http://localhost:8080/api/auth/register', user);
@@ -35,6 +35,7 @@ export class AuthService {
       .pipe(tap((data: any) => this.authSubject.next(data)));
   }
 
+  // OTHER METHODS
   restoreUser() {
     const userJson = localStorage.getItem('user');
     if (!userJson) {
@@ -51,5 +52,12 @@ export class AuthService {
       this.router.navigate(['/home']);
       return;
     }
+  }
+
+  logout() {
+    this.authSubject.next(null);
+    localStorage.removeItem('user');
+    console.log('Utente Sloggato');
+    this.router.navigate(['/auth']);
   }
 }

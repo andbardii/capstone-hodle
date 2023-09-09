@@ -1,13 +1,3 @@
-.watch{
-  background-color: #10583683;
-  border: 0;
-  border-radius: 35px;
-  color: #ffffff;
-
-  h4{
-    font-weight: 900;
-  }
-}
 .name{
   font-weight: 900;
 }
@@ -20,4 +10,9 @@
 }
 .chart{
   height: 85%;
+  .card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

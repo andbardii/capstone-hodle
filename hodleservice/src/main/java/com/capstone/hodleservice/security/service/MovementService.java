@@ -57,7 +57,7 @@ public class MovementService {
 			
 		aSvc.addAmount(pp, assetId, assetAmmount);
 		
-		wSvc.updateValue(true, walletId, (assetAmmount * pp));
+		wSvc.updateValue(walletId, this.aSvc.findByWalletId(walletId));
 		
 		System.out.println();
 		log.info("Incoming movement Id: " + m.getId() + " added succesfully.");
@@ -91,7 +91,7 @@ public class MovementService {
 		repo.save(m);
 		aSvc.removeAmount(assetId, assetAmmount);
 		
-		wSvc.updateValue(false, walletId, (assetAmmount * a.getMarketPrice()));
+		wSvc.updateValue(walletId, this.aSvc.findByWalletId(walletId));
 		
 		System.out.println();
 		log.info("Outgoing movement Id: " + m.getId() + " added succesfully.");
@@ -154,7 +154,6 @@ public class MovementService {
 			endingAssetId = endA.getId();
 			
 			aSvc.addAmount(endA.getMarketPrice(), endingAssetId, endingAssetAmmount);
-			wSvc.updateValue(true, walletId, (endingAssetAmmount * endA.getMarketPrice()));
 			aSvc.removeAmount(startingAssetId, startingAssetAmmount);
 		}else {
 			endingAssetAmmount = value/endingAsset.getMarketPrice();

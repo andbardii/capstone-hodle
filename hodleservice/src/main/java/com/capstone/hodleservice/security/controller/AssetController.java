@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,15 @@ public class AssetController {
 	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
 		List<Asset> l = svc.findByWalletId(walletId);
 		ResponseEntity<List<Asset>> resp = new ResponseEntity<List<Asset>>(l, HttpStatus.OK);
+		return resp;
+	}
+	
+	//PUT METHODS
+	@PutMapping("/updateprice/{assetId}/{newMarketPrice}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> updateMarketPrice(@PathVariable Long assetId,@PathVariable Double newMarketPrice) {
+		Asset a = svc.updateMarketPrice(assetId, newMarketPrice);
+		ResponseEntity<Asset> resp = new ResponseEntity<Asset>(a, HttpStatus.OK);
 		return resp;
 	}
 	

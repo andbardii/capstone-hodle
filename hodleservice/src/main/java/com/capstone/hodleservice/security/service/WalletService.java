@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.capstone.hodleservice.security.entity.Asset;
 import com.capstone.hodleservice.security.entity.Wallet;
 import com.capstone.hodleservice.security.enumerated.WalletType;
 import com.capstone.hodleservice.security.repository.WalletRepository;
@@ -50,14 +51,14 @@ public class WalletService {
 	}
 	
 	//PUT METHODS
-	public Wallet updateValue(boolean type, Long walletId, Double value) {
-		Wallet w = repo.findById(walletId).get();
-		if(type) {
-			w.setValue(w.getValue() + value);
-		}else {
-			w.setValue(w.getValue() - value);
+	public Wallet updateValue(Long walletId, List<Asset> l) {
+		Double value = 0.00;
+		for(Asset a: l) {
+			value = value + a.getMarketValue();
 		}
 		
+		Wallet w = repo.findById(walletId).get();
+		w.setValue(value);
 		repo.save(w);
 		return w;
 	}

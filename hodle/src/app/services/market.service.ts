@@ -12,6 +12,7 @@ export class MarketService {
 
   constructor(private http: HttpClient){}
 
+  // GET STOCK METHODS
   searchAsset(keywords: string) {
       console.log(keywords);
       this.headers = this.headers.set('X-RapidAPI-Host', 'alpha-vantage.p.rapidapi.com')

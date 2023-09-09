@@ -13,6 +13,7 @@ export class WalletService {
 
   constructor(private usvc: UserService, private http: HttpClient) { }
 
+  // POST METHODS
   addWallet(type: Wallettype) {
     this.headers = this.headers.set(
       'Authorization',
@@ -22,6 +23,7 @@ export class WalletService {
     return this.http.post<Wallet>('http://localhost:8080/api/wallet/add/' + this.usvc.getId() + '/' + Object.values(type),{} ,{headers: this.headers});
   }
 
+  // GET METHODS
   findByUser(){
     this.headers = this.headers.set(
       'Authorization',

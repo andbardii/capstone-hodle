@@ -31,7 +31,8 @@ export class WalletComponent implements OnInit {
   matches: any;
 
   movement: boolean = false;
-  mov:Movement = {};
+  mov: Movement = {};
+  movs: Movement[] = [];
 
   asset: Asset = {};
   assets: Asset[] = [];;
@@ -156,6 +157,7 @@ export class WalletComponent implements OnInit {
         this.assets = resp;
         console.log(this.assets);
         this.error = undefined;
+        this.updatePrice();
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -164,5 +166,37 @@ export class WalletComponent implements OnInit {
   }
 
   onMovementSubmit() {
+
   }
+
+  async updatePrice() {
+    for (let i = 0; i < this.assets.length; i++) {
+      this.msvc.getMarketAssetQuote(this.assets[i].ticker).subscribe(
+        (resp) => {
+          console.log(resp);
+          this.error = undefined;
+          this.asvc.updateMarketPrice(this.assets[i].id,Object.values(resp)[0]['05. price']).subscribe(
+            (resp) => {
+              console.log(resp);
+              this.error = undefined;
+            }, (err) => {
+              console.log(err.error.message);
+              this.error = err.error.message;
+            }
+          )
+        }, (err) => {
+          console.log(err.error.message);
+          this.error = err.error.message;
+        }
+      )
+      if (i < this.assets.length - 1) {
+        await this.delay(15000);
+      }
+    }
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 }

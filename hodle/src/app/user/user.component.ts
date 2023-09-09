@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user';
@@ -11,7 +12,7 @@ export class UserComponent implements OnInit{
 
   user: User = {};
 
-  constructor(private svc:UserService){}
+  constructor(private athsvc:AuthService, private svc:UserService){}
 
   ngOnInit(): void {
     this.getUser();
@@ -23,5 +24,9 @@ export class UserComponent implements OnInit{
     this.user.name = this.svc.getName();
     this.user.email = this.svc.getEmail();
     this.user.exp = this.svc.getExp();
+  }
+
+  logout() {
+    this.athsvc.logout();
   }
 }
