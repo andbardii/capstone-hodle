@@ -24,10 +24,11 @@ public class WalletService {
 	@Autowired @Qualifier("wallet") private ObjectProvider<Wallet> provider;
 	
 	//POST METHODS
-	public Wallet addWallet(WalletType type, Long userId) {
+	public Wallet addWallet(WalletType type, Long userId, String name) {
 
 			Wallet w = provider.getObject().builder()
 				    .walletType(type)
+				    .name(name)
 				    .userId(userId)
 					.value(0.00)
 					.build();

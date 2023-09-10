@@ -41,6 +41,7 @@ public class AuthController {
         jwtAuthResponse.setUserId(u.getId());
         jwtAuthResponse.setEmail(u.getEmail());
         jwtAuthResponse.setExp(u.getExp());
+        jwtAuthResponse.setCurrency(u.getCurrency());
         jwtAuthResponse.setName(u.getName());
         jwtAuthResponse.setUsername(loginDto.getUsername());
         jwtAuthResponse.setAccessToken(token);

@@ -46,8 +46,9 @@ public class WalletController {
 	//POST METHODS
 	@PostMapping("/add/{userId}/{type}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> addWallet(@PathVariable Long userId, @PathVariable WalletType type) {
-        Wallet w = svc.addWallet(type, userId);
+    public ResponseEntity<?> addWallet(@PathVariable Long userId, @PathVariable WalletType type, 
+    									@RequestBody String name) {
+        Wallet w = svc.addWallet(type, userId, name);
         return new ResponseEntity<Wallet>(w, HttpStatus.CREATED);
     }
 	

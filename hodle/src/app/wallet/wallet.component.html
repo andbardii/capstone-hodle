@@ -15,8 +15,8 @@
         </div>
         <div class="col-12 h-50 text-center text-light">
           <h3><b>WALLET {{windex+1}}</b></h3>
-          <p class="sub">{{wallets[windex].walletType}}</p>
-          <h3 class="card p-2 val"><b>{{wallets[windex].value | number: '1.2-2' }} $</b></h3>
+          <p class="sub">( {{wallets[windex].walletType}} )</p>
+          <h3 class="card p-2 val"><b>{{wallets[windex].value | number: '1.2-2' }} {{currency}}</b></h3>
         </div>
         <div class="col-12 h-25 add">
           <div class="d-grid gap-2 mb-3">
@@ -43,9 +43,9 @@
             <div class="col-12 h-25 p-2 pb-3">
               <div class="card h-100">
                 <p class="card-title p-2">Latest movements:</p>
-                <div class="row h-100">
+                <div class="row h-100 p-2 overflow-auto">
                   <div class="col-12" *ngFor="let movement of movs">
-                    <div class="col-7">{{movement.id}}</div>
+                    <div class="col-7"><b>{{movement.id}}</b> - {{movement.movementType}}</div>
                   </div>
                 </div>
               </div>
@@ -56,9 +56,10 @@
           <div class="card row h-100">
             <p class="card-title p-2 ps-3">Asset allocation:</p>
             <div class="col-12" *ngFor="let asset of assets">
-              <div class="row p-2">
-                <div class="col-7"><b>{{asset.ticker}}</b></div>
-                <div class="col-5">{{asset.marketValue | number: '1.2-2'}} $</div>
+              <div class="row p-1">
+                <div class="col-4"><b>{{asset.ticker}}</b></div>
+                <div class="col-2"><b>{{asset.amount | number: '1.1-1'}}</b></div>
+                <div class="col-6">{{asset.marketValue | number: '1.2-2'}} {{currency}}</div>
               </div>
             </div>
           </div>
@@ -78,14 +79,17 @@
           <div class="mt-2">
             <form #f="ngForm" (ngSubmit)="onSubmit()">
               <div class="d-grid gap-2 mb-3">
-                <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+                <input type="text" ngModel class="form-control" id="name"  name="name" placeholder="Wallet Name..." required />
               </div>
-                <select ngModel class="form-select" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
                   <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
                   <option value="CONTO_TITOLI">CONTO TITOLI</option>
                   <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
                   <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
                 </select>
+                <div class="d-grid gap-2 mb-3">
+                  <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+                </div>
             </form>
           </div>
         </div>
@@ -109,14 +113,17 @@
           <div class="mt-2">
             <form #f="ngForm" (ngSubmit)="onSubmit()">
               <div class="d-grid gap-2 mb-3">
-                <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+                <input type="text" ngModel class="form-control" id="name"  name="name" placeholder="Wallet Name..." required />
               </div>
-                <select ngModel class="form-select" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
                   <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
                   <option value="CONTO_TITOLI">CONTO TITOLI</option>
                   <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
                   <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
                 </select>
+                <div class="d-grid gap-2 mb-3">
+                  <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+                </div>
             </form>
           </div>
         </div>
@@ -263,28 +270,188 @@
     <div class="col-12 h-100 p-5 box">
       <div class="card needw">
         <div class="w-100 back">
-          <svg (click)="movement = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+          <svg (click)="closeMovZone()" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
           </svg>
         </div>
         <div class="card-body">
-          <h4 class="card-title"><b>CREATE WALLET</b></h4>
-          <div class="mt-2">
-            <form #m="ngForm" (ngSubmit)="onMovementSubmit()">
-              <div class="d-grid gap-2 mb-3">
-                <button class="btn btn-success" type="submit"><b>MOVE YOUR FUNDS</b></button>
-              </div>
-                <select ngModel class="form-select" aria-label="movementType" placeholder="Enter the type of this movement..." id="movementType" name="movementType" required>
-                  <option value="INCOMING">INCOMING</option>
-                  <option value="OUTGOING">OUTGOING</option>
-                  <option value="TRANSFER">TRANSFER</option>
-                  <option value="CONVERT">CONVERT</option>
-                </select>
+          <div class="add h-25">
+            <h4 class="card-title text-center"><b>MOVE YOUR FUNDS</b></h4>
+            <button class="btn border border-success" (click)="incoming = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">INCOMING</button>
+            <button class="btn border border-success" (click)="outgoing = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">OUTGOING</button>
+            <button class="btn border border-success" (click)="transfer = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">TRANSFER</button>
+            <button class="btn border border-success" (click)="convert = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">CONVERT</button>
+          </div>
 
-                <div class="mb-1">
-                  <input type="number" [(ngModel)]="mov.movementType" class="form-control" id="marketPrice" name="marketPrice" placeholder="Market Price" readonly />
+          <div class="row tasset match my-2 overflow-auto">
+            <div class="col-12" *ngIf="incoming == true || outgoing == true || transfer == true || convert == true">
+            <div class="card p-2" *ngFor="let a of assets" (click)="selectAsset(a.id)">
+             <p class="m-0"><b>{{a.ticker}} </b> ({{a.amount}})</p>
+             <p class="m-0">{{a.name}}</p>
+            </div>
+          </div>
+          </div>
+          <div class="row h-75">
+            <div class="col-12" *ngIf="incoming == true">
+              <form #mi="ngForm" (ngSubmit)="onIncomingMovement()">
+                <div class="mb-1 d-flex">
+                  <input type="number" [(ngModel)]="mov.startingAssetId" class="d-none" id="startingAssetId"  name="startingAssetId" placeholder="Select Asset..." readonly  />
+                  <input type="number" ngModel class="form-control" id="amount"  name="amount" placeholder="Select Amount..." required />
+                  <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                    </svg>
+                  </button>
                 </div>
-            </form>
+              </form>
+            </div>
+            <div class="col-12" *ngIf="outgoing == true">
+              <form #mo="ngForm" (ngSubmit)="onOutgoingMovement()">
+                <div class="mb-1 d-flex">
+                  <input type="number" [(ngModel)]="mov.startingAssetId" class="d-none" id="startingAssetId"  name="startingAssetId" placeholder="Select Asset..." readonly  />
+                  <input type="number" ngModel class="form-control" id="amount"  name="amount" placeholder="Select Amount..." required />
+                  <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="col-12" *ngIf="transfer == true">
+              <form #mt="ngForm" (ngSubmit)="onTransferMovement()">
+                <div class="mb-1 d-flex">
+                  <input type="number" [(ngModel)]="mov.startingAssetId" class="d-none" id="startingAssetId"  name="startingAssetId" placeholder="Select Asset..." readonly  />
+                  <select ngModel class="form-select" aria-label="endingWalletId" placeholder="Enter Landing Wallet..." id="endingWalletId" name="endingWalletId" required>
+                    <option *ngFor="let w of wallets" value="{{w.id}}">{{w.name}}</option>
+                  </select>
+                  <input type="number" ngModel class="form-control" id="amount"  name="amount" placeholder="Select Amount..." required />
+                  <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="col-12" *ngIf="convert == true">
+              <form #s="ngForm" (ngSubmit)="onSearch()">
+                <div class="d-flex">
+                  <input type="text" ngModel class="form-control search" id="keywords"  name="keywords" placeholder="Search Asset..." required />
+                  <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-search" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+              <div class="match my-1 overflow-auto">
+                <div class="card p-1" *ngFor="let asset of matches" (click)="checkAsset(asset)">
+                  <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
+                  <p class="m-0">Zone: {{asset['4. region']}}</p>
+                  <p class="m-0">Type: {{asset['3. type']}}</p>
+                </div>
+              </div>
+              <form #mc="ngForm" (ngSubmit)="onConvertMovement()">
+                <div class="mb-1">
+                  <input type="number" [(ngModel)]="mov.startingAssetId" class="d-none" id="startingAssetId"  name="startingAssetId" placeholder="Select Asset..." readonly  />
+
+                <div class="d-flex nex w-100">
+                  <div class="mb-1">
+                    <input type="text" [(ngModel)]="asset.ticker" class="form-control" id="ticker" name="ticker" placeholder="Asset Ticker" readonly />
+                  </div>
+                  <div class="mb-1" *ngIf="aexist == false">
+                    <select [(ngModel)]="asset.zone" class="form-select" aria-label="zone" placeholder="Enter Asset Zone..." id="zone" name="zone" required>
+                      <option value="World">World</option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Belgium">Belgium</option>
+                      <option value="Brazil">Brazil</option>
+                      <option value="Bulgaria">Bulgaria</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Central_African_Republic">Central African Republic</option>
+                      <option value="China">China</option>
+                      <option value="Czech_Republic">Czech Republic</option>
+                      <option value="Denmark">Denmark</option>
+                      <option value="France">France</option>
+                      <option value="Germany">Germany</option>
+                      <option value="Greece">Greece</option>
+                      <option value="Iceland">Iceland</option>
+                      <option value="Colombia">Colombia</option>
+                      <option value="India">India</option>
+                      <option value="Ireland">Ireland</option>
+                      <option value="Italy">Italy</option>
+                      <option value="Japan">Japan</option>
+                      <option value="Luxembourg">Luxembourg</option>
+                      <option value="Monaco">Monaco</option>
+                      <option value="Montenegro">Montenegro</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="New_Zealand">New Zealand</option>
+                      <option value="Poland">Poland</option>
+                      <option value="Qatar">Qatar</option>
+                      <option value="Portugal">Portugal</option>
+                      <option value="Russia">Russia</option>
+                      <option value="Saudi_Arabia">Saudi Arabia</option>
+                      <option value="South_Africa">South Africa</option>
+                      <option value="South Korea">South Korea</option>
+                      <option value="Switzerland">Switzerland</option>
+                      <option value="Ukraine">Ukraine</option>
+                      <option value="United_Arab_Emirates">United Arab Emirates</option>
+                      <option value="United_Kingdom">United Kingdom</option>
+                      <option value="United_States_of_America">United States of America</option>
+                    </select>
+                  </div>
+                  <div class="mb-1" *ngIf="aexist == false">
+                    <select [(ngModel)]="asset.assetType" class="form-select" aria-label="assetType" placeholder="Enter Asset Type..." id="assetType" name="assetType" required>
+                      <option value="FIAT">FIAT</option>
+                      <option value="STOCK">Equity</option>
+                      <option value="ETF">ETF</option>
+                      <option value="CRYPTO">Crypto</option>
+                      <option value="BOND">Bond</option>
+                      <option value="ETC">ETC</option>
+                      <option value="ETN">ETN</option>
+                      <option value="REIT">REIT</option>
+                    </select>
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <select [(ngModel)]="asset.assetClass" class="form-select" aria-label="assetClass" placeholder="Enter Asset Class..." id="assetClass" name="assetClass" required>
+                      <option value="FIAT">FIAT</option>
+                      <option value="STOCK">Equity</option>
+                      <option value="CRYPTO">Crypto</option>
+                      <option value="BOND">Bond</option>
+                      <option value="REALESTATE">Realestate</option>
+                    </select>
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="text" [(ngModel)]="asset.name" class="form-control" id="name" name="name" placeholder="Asset Name" readonly />
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="number" [(ngModel)]="asset.tax" class="form-control" id="tax" name="tax" placeholder="Applicable taxes" required />
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="number" [(ngModel)]="asset.paidCommission" class="form-control" id="paidCommission" name="paidCommission" placeholder="Paid Commissions" required />
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="text" [(ngModel)]="asset.issuer" class="form-control" id="issuer" name="issuer" placeholder="Issuer of the Asset" required />
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="text" [(ngModel)]="asset.exchange" class="form-control" id="exchange" name="exchange" placeholder="Reference Exchange" required />
+                  </div>
+                  <div class="mb-1"  *ngIf="aexist == false">
+                    <input type="text" [(ngModel)]="asset.intermediary" class="form-control" id="intermediary" name="intermediary" placeholder="Your Intermediary" required />
+                  </div>
+                </div>
+                <div class="go w-100">
+                  <input type="number" ngModel class="form-control" id="amount"  name="amount" placeholder="Select Amount..." required />
+                  <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                    </svg>
+                  </button>
+                </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ public class MovementController {
 		return resp;
 	}
 	
-	@GetMapping("/byuser/{id}")
+	@GetMapping("/byuser/{userId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByUserId(@PathVariable Long userId) {
 		List<Movement> l = svc.findByUserId(userId);
@@ -42,7 +42,7 @@ public class MovementController {
 		return resp;
 	}
 	
-	@GetMapping("/bywallet/{id}")
+	@GetMapping("/bywallet/{walletId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByWalletId(@PathVariable Long walletId) {
 		List<Movement> l = svc.findByWalletId(walletId);

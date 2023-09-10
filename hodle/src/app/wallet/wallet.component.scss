@@ -31,6 +31,9 @@
     }
   }
 }
+.tasset{
+  height: 5vh;
+}
 .match{
   height: 10vh;
   .card{
@@ -62,4 +65,13 @@
       color: #ffffff;
     }
   }
+}
+.nex{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.go{
+  display: flex;
+  flex-direction: row;
 }

@@ -27,6 +27,8 @@ public class Wallet {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	private String name;
+	
 	@Column(nullable= false)
 	@Enumerated(EnumType.STRING)
 	private WalletType walletType;

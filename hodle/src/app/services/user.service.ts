@@ -66,5 +66,14 @@ export class UserService {
       return 0;
     }
   }
+  getCurrency(): string {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.currency;
+    } else {
+      return '';
+    }
+  }
 
 }

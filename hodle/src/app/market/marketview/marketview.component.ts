@@ -1,8 +1,10 @@
+import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MarketService } from 'src/app/services/market.service';
 import { Chart, registerables } from 'chart.js';
 import { formatDate } from '@angular/common';
+import { Currencyoptions } from 'src/app/enumerated/currencyoptions';
 Chart.register(...registerables)
 
 @Component({
@@ -11,6 +13,8 @@ Chart.register(...registerables)
   styleUrls: ['./marketview.component.scss']
 })
 export class MarketviewComponent implements OnInit{
+
+  currency!: string;
 
   asset:any;
   values:any;
@@ -22,10 +26,11 @@ export class MarketviewComponent implements OnInit{
 
   yesterday:string = '';
 
-  constructor(private svc: MarketService, private route:ActivatedRoute){}
+  constructor(private usvc: UserService, private svc: MarketService, private route:ActivatedRoute){}
 
   ngOnInit(): void {
     this.getMarketDailyData();
+    this.currency = this.usvc.getCurrency();
   }
 
   getMarketDailyData(){

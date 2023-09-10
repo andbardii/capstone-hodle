@@ -7,6 +7,7 @@ import { Wallet } from '../interfaces/wallet';
 import { Asset } from '../interfaces/asset';
 import { Movement } from '../interfaces/movement';
 import { MovementService } from '../services/movement.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-wallet',
@@ -15,11 +16,18 @@ import { MovementService } from '../services/movement.service';
 })
 export class WalletComponent implements OnInit {
 
+  //RIATTIVARE UPDATE PRICE !!!!!!!!!!!!!!
   @ViewChild('f') form!: NgForm;
   @ViewChild('s') sform!: NgForm;
   @ViewChild('a') aform!: NgForm;
-  @ViewChild('m') mform!: NgForm;
+
+  @ViewChild('mi') miform!: NgForm;
+  @ViewChild('mo') moform!: NgForm;
+  @ViewChild('mt') mtform!: NgForm;
+  @ViewChild('mc') mcform!: NgForm;
   error: undefined | string;
+
+  currency!: string;
 
   wallets: Wallet[] = [];
   needwallet: boolean = false;
@@ -33,14 +41,21 @@ export class WalletComponent implements OnInit {
   movement: boolean = false;
   mov: Movement = {};
   movs: Movement[] = [];
+  incoming: boolean = false;
+  outgoing: boolean = false;
+  transfer: boolean = false;
+  convert: boolean = false;
+  aexist: boolean = false;
 
   asset: Asset = {};
   assets: Asset[] = [];;
 
   constructor(private asvc: AssetService, private msvc: MarketService,
-              private svc: WalletService, private mosvc: MovementService){}
+              private svc: WalletService, private movsvc: MovementService,
+              private usvc: UserService){}
 
   ngOnInit(): void {
+    this.currency = this.usvc.getCurrency();
     this.findByUser();
   }
 
@@ -107,6 +122,7 @@ export class WalletComponent implements OnInit {
           this.needwallet = true;
         }
         this.findAssetsByWalletId();
+        this.getMovements();
         this.error = undefined;
       }, (err) => {
         console.log(err.error.message);
@@ -121,6 +137,7 @@ export class WalletComponent implements OnInit {
     }else{
       this.windex = this.windex - 1;
       this.findAssetsByWalletId();
+      this.getMovements();
     }
   }
 
@@ -130,6 +147,7 @@ export class WalletComponent implements OnInit {
     }else{
       this.windex = this.windex + 1;
       this.findAssetsByWalletId();
+      this.getMovements();
     }
   }
 
@@ -157,7 +175,7 @@ export class WalletComponent implements OnInit {
         this.assets = resp;
         console.log(this.assets);
         this.error = undefined;
-        this.updatePrice();
+        // this.updatePrice();
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -165,8 +183,124 @@ export class WalletComponent implements OnInit {
     )
   }
 
-  onMovementSubmit() {
+  findUpdatedAssets(){
+    this.asvc.findByWalletId(this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        this.assets = resp;
+        console.log(this.assets);
+        this.error = undefined;
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+  // MOVEMENT METHODS
+  getMovements(){
+    this.movsvc.getMovsByWallet(this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        this.movs = resp;
+        console.log(this.movs);
+        this.error = undefined;
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
 
+  onIncomingMovement() {
+    this.movsvc.addIncoming(this.miform.value, this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.closeMovZone();
+        this.movement = false;
+        this.getMovements();
+        this.findUpdatedAssets();
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+
+  onOutgoingMovement() {
+    this.movsvc.addOutgoing(this.moform.value, this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.movement = false;
+        this.closeMovZone();
+        this.movement = false;
+        this.getMovements();
+        this.findUpdatedAssets();
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+
+  onTransferMovement() {
+    this.movsvc.addTransfer(this.mtform.value, this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.movement = false;
+        this.closeMovZone();
+        this.movement = false;
+        this.getMovements();
+        this.findUpdatedAssets();
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+
+  onConvertMovement() {
+    this.movsvc.addConvert(this.mcform.value, this.wallets[this.windex].id, this.asset).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.closeMovZone();
+        this.getMovements();
+        this.movement = false;
+        this.findUpdatedAssets();
+        this.aexist = false;
+        this.mcform.reset();
+        this.asset = {};
+      }, (err) => {
+        console.log(err.error.message);
+      }
+    )
+  }
+
+  selectAsset(id: any) {
+    this.mov.startingAssetId = id;
+    console.log(this.mov.startingAssetId)
+  }
+
+  checkAsset(a:any) {
+    for(let i = 0; i < this.assets.length; i++){
+      if (this.assets[i].ticker == a['1. symbol']) {
+        this.aexist = true;
+        this.asset.ticker = a['1. symbol'];
+      }else{
+        this.asset.ticker = a['1. symbol'];
+        this.asset.name = a['2. name'];
+        this.msvc.getMarketAssetQuote(a['1. symbol']).subscribe(
+          (resp) => {
+            console.log(resp);
+            this.error = undefined;
+            this.asset.marketPrice = Object.values(resp)[0]['05. price'];
+          }, (err) => {
+            console.log(err.error.message);
+            this.error = err.error.message;
+          }
+        )
+      }
+    }
   }
 
   async updatePrice() {
@@ -199,4 +333,15 @@ export class WalletComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  closeMovZone(){
+    if(this.incoming == true || this.outgoing == true ||
+       this.transfer == true || this.convert == true){
+        this.incoming = false;
+        this.outgoing = false;
+        this.transfer = false;
+        this.convert = false;
+       }else{
+        this.movement = false;
+       }
+  }
 }
