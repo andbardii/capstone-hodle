@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { TodosRoutingModule } from './todos-routing.module';
 import { TodosComponent } from './todos.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { TodosComponent } from './todos.component';
   ],
   imports: [
     CommonModule,
-    TodosRoutingModule
+    TodosRoutingModule,
+    HttpClientModule,
+    FormsModule
   ]
 })
 export class TodosModule { }
