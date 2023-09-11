@@ -8,6 +8,9 @@ import { Asset } from '../interfaces/asset';
 import { Movement } from '../interfaces/movement';
 import { MovementService } from '../services/movement.service';
 import { UserService } from '../services/user.service';
+import { Assettype } from '../enumerated/assettype';
+import { Assetclass } from '../enumerated/assetclass';
+import { Wallettype } from '../enumerated/wallettype';
 
 @Component({
   selector: 'app-wallet',
@@ -16,10 +19,12 @@ import { UserService } from '../services/user.service';
 })
 export class WalletComponent implements OnInit {
 
-  //RIATTIVARE UPDATE PRICE !!!!!!!!!!!!!!
+
   @ViewChild('f') form!: NgForm;
   @ViewChild('s') sform!: NgForm;
   @ViewChild('a') aform!: NgForm;
+  @ViewChild('c') cform!: NgForm;
+  @ViewChild('cc') ccform!: NgForm;
 
   @ViewChild('mi') miform!: NgForm;
   @ViewChild('mo') moform!: NgForm;
@@ -35,6 +40,9 @@ export class WalletComponent implements OnInit {
 
   windex: number = 0;
   postasset: boolean = false;
+  maincurrency: boolean = false;
+  depositcurr: boolean = false;
+  convertcurr: boolean = false;
   postmove: boolean = false;
   matches: any;
 
@@ -48,7 +56,7 @@ export class WalletComponent implements OnInit {
   aexist: boolean = false;
 
   asset: Asset = {};
-  assets: Asset[] = [];;
+  assets: Asset[] = [];
 
   constructor(private asvc: AssetService, private msvc: MarketService,
               private svc: WalletService, private movsvc: MovementService,
@@ -113,6 +121,54 @@ export class WalletComponent implements OnInit {
               );
   }
 
+  depositMainCurrency() {
+    this.asvc.addAsset(this.cform.value).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.closeCurrencyZone();
+        this.maincurrency = false;
+        this.findByUser();
+        this.cform.reset();
+        this.asset = {};
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    );
+  }
+
+  convertToMainCurrency() {
+    this.movsvc.addConvert(this.ccform.value, this.wallets[this.windex].id, this.asset).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.closeCurrencyZone();
+        this.maincurrency = false;
+        this.findByUser();
+        this.ccform.reset();
+        this.asset = {};
+        this.mov = {};
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
+
+  addMain() {
+    this.maincurrency = true;
+    this.asset.name = this.currency;
+    this.asset.ticker = this.currency;
+    this.asset.marketPrice = 1.00;
+    this.asset.assetType = Assettype.FIAT;
+    this.asset.assetClass = Assetclass.FIAT;
+    this.asset.tax = 0.00;
+    this.asset.paidCommission = 0.00;
+    this.asset.averagePurchasePrice = 1.00;
+    this.asset.walletId = this.wallets[this.windex].id;
+  }
+
   findByUser(){
     this.svc.findByUser().subscribe(
       (resp) => {
@@ -175,7 +231,7 @@ export class WalletComponent implements OnInit {
         this.assets = resp;
         console.log(this.assets);
         this.error = undefined;
-        // this.updatePrice();
+        this.updatePrice();
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -187,6 +243,15 @@ export class WalletComponent implements OnInit {
     this.asvc.findByWalletId(this.wallets[this.windex].id).subscribe(
       (resp) => {
         this.assets = resp;
+        this.svc.findByUser().subscribe(
+          (resp) => {
+            this.wallets = resp;
+            this.error = undefined;
+          }, (err) => {
+            console.log(err.error.message);
+            this.error = err.error.message;
+          }
+        );
         console.log(this.assets);
         this.error = undefined;
       }, (err) => {
@@ -195,7 +260,7 @@ export class WalletComponent implements OnInit {
       }
     )
   }
-  // MOVEMENT METHODS
+
   getMovements(){
     this.movsvc.getMovsByWallet(this.wallets[this.windex].id).subscribe(
       (resp) => {
@@ -305,6 +370,9 @@ export class WalletComponent implements OnInit {
 
   async updatePrice() {
     for (let i = 0; i < this.assets.length; i++) {
+      if(this.assets[i].ticker == this.currency){
+        console.log("no update is needed")
+      }else{
       this.msvc.getMarketAssetQuote(this.assets[i].ticker).subscribe(
         (resp) => {
           console.log(resp);
@@ -327,6 +395,7 @@ export class WalletComponent implements OnInit {
         await this.delay(15000);
       }
     }
+    }
   }
 
   delay(ms: number) {
@@ -344,4 +413,15 @@ export class WalletComponent implements OnInit {
         this.movement = false;
        }
   }
+
+  closeCurrencyZone() {
+    if(this.depositcurr == true || this.convertcurr == true){
+      this.depositcurr = false;
+      this.convertcurr = false;
+      }else{
+       this.maincurrency = false;
+      }
+  }
+
+
 }
