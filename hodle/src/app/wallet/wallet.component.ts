@@ -10,7 +10,6 @@ import { MovementService } from '../services/movement.service';
 import { UserService } from '../services/user.service';
 import { Assettype } from '../enumerated/assettype';
 import { Assetclass } from '../enumerated/assetclass';
-import { Wallettype } from '../enumerated/wallettype';
 
 @Component({
   selector: 'app-wallet',
@@ -54,6 +53,7 @@ export class WalletComponent implements OnInit {
   transfer: boolean = false;
   convert: boolean = false;
   aexist: boolean = false;
+  currexist: boolean = false;
 
   asset: Asset = {};
   assets: Asset[] = [];
@@ -208,11 +208,23 @@ export class WalletComponent implements OnInit {
   }
 
   chooseNewAsset(asset:any){
-    this.msvc.getMarketAssetQuote(asset['1. symbol']).subscribe(
+    console.log(asset)
+    this.msvc.getMarketAssetQuote(asset.symbol).subscribe(
       (resp) => {
-        console.log(resp);
+        console.log(Object.values(resp)[10]);
         this.error = undefined;
-        this.asset.marketPrice = Object.values(resp)[0]['05. price'];
+        if(Object.values(resp)[0] == 400){
+          this.error = "Asset not available for your plan";
+        }else{
+          this.error = undefined;
+        }
+        let index;
+          if(asset.symbol!.includes("/")){
+            index = 8
+          }else{
+            index = 10
+          }
+        this.asset.marketPrice = Object.values(resp)[10];
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -220,9 +232,10 @@ export class WalletComponent implements OnInit {
     )
     this.matches.splice(0, this.matches.length);
     this.matches.push(asset);
-    this.asset.name = asset['2. name']
-    this.asset.ticker = asset['1. symbol']
+    this.asset.name = asset.instrument_name;
+    this.asset.ticker = asset.symbol;
     this.asset.walletId = this.wallets[this.windex].id
+    this.asset.exchange = asset.exchange;
   }
 
   findAssetsByWalletId(){
@@ -232,6 +245,7 @@ export class WalletComponent implements OnInit {
         console.log(this.assets);
         this.error = undefined;
         this.updatePrice();
+        this.checkCurrency();
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -259,6 +273,14 @@ export class WalletComponent implements OnInit {
         this.error = err.error.message;
       }
     )
+  }
+
+  checkCurrency() {
+    for(let i = 0; i < this.assets.length; i++){
+      if (this.assets[i].ticker == this.currency) {
+        this.currexist = true;
+      }
+    }
   }
 
   getMovements(){
@@ -348,17 +370,27 @@ export class WalletComponent implements OnInit {
 
   checkAsset(a:any) {
     for(let i = 0; i < this.assets.length; i++){
-      if (this.assets[i].ticker == a['1. symbol']) {
+      if (this.assets[i].ticker == a.symbol) {
         this.aexist = true;
-        this.asset.ticker = a['1. symbol'];
+        this.asset.ticker = a.symbol;
       }else{
-        this.asset.ticker = a['1. symbol'];
-        this.asset.name = a['2. name'];
-        this.msvc.getMarketAssetQuote(a['1. symbol']).subscribe(
+        this.asset.ticker = a.symbol;
+        this.asset.name = a.name;
+        this.msvc.getMarketAssetQuote(a.symbol).subscribe(
           (resp) => {
-            console.log(resp);
-            this.error = undefined;
-            this.asset.marketPrice = Object.values(resp)[0]['05. price'];
+            console.log(resp, Object.values(resp)[10]);
+            let index;
+            if(this.assets[i].ticker!.includes("/")){
+              index = 8
+            }else{
+              index = 10
+            }
+              this.asset.marketPrice = Object.values(resp)[index];
+            if(Object.values(resp)[0] == 400){
+              this.error = "Asset not available for your plan";
+            }else{
+              this.error = undefined;
+            }
           }, (err) => {
             console.log(err.error.message);
             this.error = err.error.message;
@@ -376,8 +408,19 @@ export class WalletComponent implements OnInit {
       this.msvc.getMarketAssetQuote(this.assets[i].ticker).subscribe(
         (resp) => {
           console.log(resp);
-          this.error = undefined;
-          this.asvc.updateMarketPrice(this.assets[i].id,Object.values(resp)[0]['05. price']).subscribe(
+          if(Object.values(resp)[0] == 400){
+            this.error = "Asset not available for your plan";
+          }else{
+            this.error = undefined;
+          }
+          console.log(Object.values(resp))
+          let index;
+          if(this.assets[i].ticker!.includes("/")){
+            index = 8
+          }else{
+            index = 10
+          }
+          this.asvc.updateMarketPrice(this.assets[i].id,Object.values(resp)[index]).subscribe(
             (resp) => {
               console.log(resp);
               this.error = undefined;

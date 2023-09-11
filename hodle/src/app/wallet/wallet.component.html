@@ -165,9 +165,9 @@
             </div>
           <div class="match my-1 overflow-auto">
             <div class="card p-1" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
-              <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
-              <p class="m-0">Zone: {{asset['4. region']}}</p>
-              <p class="m-0">Type: {{asset['3. type']}}</p>
+              <p class="m-0"><b>{{asset.symbol}}</b> ({{asset.instrument_name}})</p>
+              <p class="m-0">Zone: {{asset.country}}</p>
+              <p class="m-0">Type: {{asset.instrument_type}}</p>
             </div>
           </div>
           <div>
@@ -228,7 +228,7 @@
               <div class="mb-1">
                 <select ngModel class="form-select" aria-label="assetType" placeholder="Enter Asset Type..." id="assetType" name="assetType" required>
                   <option value="FIAT">FIAT</option>
-                  <option value="STOCK">Equity</option>
+                  <option value="STOCK">Stock</option>
                   <option value="ETF">ETF</option>
                   <option value="CRYPTO">Crypto</option>
                   <option value="BOND">Bond</option>
@@ -240,7 +240,7 @@
               <div class="mb-1">
                 <select ngModel class="form-select" aria-label="assetClass" placeholder="Enter Asset Class..." id="assetClass" name="assetClass" required>
                   <option value="FIAT">FIAT</option>
-                  <option value="STOCK">Equity</option>
+                  <option value="STOCK">Stock</option>
                   <option value="CRYPTO">Crypto</option>
                   <option value="BOND">Bond</option>
                   <option value="REALESTATE">Realestate</option>
@@ -259,10 +259,10 @@
                 <input type="number" ngModel class="form-control" id="averagePurchasePrice" name="averagePurchasePrice" placeholder="Average Purchase Price" required />
               </div>
               <div class="mb-1">
-                <input type="text" ngModel class="form-control" id="issuer" name="issuer" placeholder="Issuer of the Asset" required />
+                <input type="text" [(ngModel)]="asset.name" class="form-control" id="issuer" name="issuer" placeholder="Issuer of the Asset" readonly />
               </div>
               <div class="mb-1">
-                <input type="text" ngModel class="form-control" id="exchange" name="exchange" placeholder="Reference Exchange" required />
+                <input type="text" [(ngModel)]="asset.exchange" class="form-control" id="exchange" name="exchange" placeholder="Reference Exchange" readonly />
               </div>
               <div class="mb-1">
                 <input type="text" ngModel class="form-control" id="intermediary" name="intermediary" placeholder="Your Intermediary" required />
@@ -293,7 +293,9 @@
         <div class="card-body">
           <div class="add">
             <button class="btn btn-success" (click)=" depositcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>DEPOSIT {{currency}}</b></button>
+           <div *ngIf="currexist == false" class="d-inline">
             <button class="btn btn-success" (click)=" convertcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>CONVERT TO {{currency}}</b></button>
+           </div>
           </div>
           <div class="mt-2" *ngIf="depositcurr == true">
             <form #c="ngForm" (ngSubmit)="depositMainCurrency()">
@@ -482,9 +484,9 @@
                 </div>
               <div class="match my-1 overflow-auto">
                 <div class="card p-1" *ngFor="let asset of matches" (click)="checkAsset(asset)">
-                  <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
-                  <p class="m-0">Zone: {{asset['4. region']}}</p>
-                  <p class="m-0">Type: {{asset['3. type']}}</p>
+                  <p class="m-0"><b>{{asset.symbol}}</b> ({{asset.instrument_name}})</p>
+                  <p class="m-0">Zone: {{asset.country}}</p>
+                  <p class="m-0">Type: {{asset.instrument_type}}</p>
                 </div>
               </div>
               <form #mc="ngForm" (ngSubmit)="onConvertMovement()">
@@ -539,7 +541,7 @@
                   <div class="mb-1" *ngIf="aexist == false">
                     <select [(ngModel)]="asset.assetType" class="form-select" aria-label="assetType" placeholder="Enter Asset Type..." id="assetType" name="assetType" required>
                       <option value="FIAT">FIAT</option>
-                      <option value="STOCK">Equity</option>
+                      <option value="STOCK">Stock</option>
                       <option value="ETF">ETF</option>
                       <option value="CRYPTO">Crypto</option>
                       <option value="BOND">Bond</option>
@@ -551,7 +553,7 @@
                   <div class="mb-1"  *ngIf="aexist == false">
                     <select [(ngModel)]="asset.assetClass" class="form-select" aria-label="assetClass" placeholder="Enter Asset Class..." id="assetClass" name="assetClass" required>
                       <option value="FIAT">FIAT</option>
-                      <option value="STOCK">Equity</option>
+                      <option value="STOCK">Stock</option>
                       <option value="CRYPTO">Crypto</option>
                       <option value="BOND">Bond</option>
                       <option value="REALESTATE">Realestate</option>

@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MarketService } from 'src/app/services/market.service';
 import { Chart, registerables } from 'chart.js';
-import { formatDate } from '@angular/common';
-import { Currencyoptions } from 'src/app/enumerated/currencyoptions';
 Chart.register(...registerables)
 
 @Component({
@@ -14,6 +12,7 @@ Chart.register(...registerables)
 })
 export class MarketviewComponent implements OnInit{
 
+  error: undefined | string;
   currency!: string;
 
   asset:any;
@@ -23,8 +22,6 @@ export class MarketviewComponent implements OnInit{
   datas:any;
   high:any;
   low:any;
-
-  yesterday:string = '';
 
   constructor(private usvc: UserService, private svc: MarketService, private route:ActivatedRoute){}
 
@@ -40,27 +37,19 @@ export class MarketviewComponent implements OnInit{
       this.svc.getMarketDailyView(params).subscribe(
           (data) => {
           console.log(Object.values(data)[0])
+          console.log(Object.values(data)[1])
           this.asset = Object.values(data)[0]
           this.values = Object.values(data)[1];
           this.getData();
+          if(Object.values(data)[0] == 400){
+            this.error = "Asset not available for your plan";
+          }else{
+            this.error = undefined;
+          }
           },
           (err) => {
           console.log(err.error.message);
-      })
-    })
-  }
-
-  getMarketIntradayData(interval: number){
-    this.route.params
-    .subscribe((params:any)=>{
-      console.log(params)
-      this.svc.getMarketIntradayView(params, interval).subscribe(
-          (data) => {
-          console.log(data)
-          this.getData();
-          },
-          (err) => {
-          console.log(err.error.message);
+          this.error = err.error.message;
       })
     })
   }
@@ -111,12 +100,11 @@ export class MarketviewComponent implements OnInit{
     const lowd = [];
 
     for (const key in this.values) {
-      labelsd.push(key);
-      datasd.push(this.values[key]['4. close']);
-      highd.push(this.values[key]['2. high']);
-      lowd.push(this.values[key]['3. low']);
+      labelsd.push(this.values[key].datetime);
+      datasd.push(this.values[key].close);
+      highd.push(this.values[key].high);
+      lowd.push(this.values[key].low);
     }
-    this.yesterday = labelsd[0];
     this.low = lowd.reverse();
     this.high = highd.reverse();
     this.labels = labelsd.reverse();

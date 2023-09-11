@@ -23,9 +23,9 @@ export class MarketComponent implements OnInit{
   onSubmit() {
     if(this.form.value.keywords.trim() !== ''){
       this.svc.searchAsset(this.form.value).subscribe((data) => {
-            console.log(Object.values(data)[0]);
-            this.matches = Object.values(data)[0];
-            this.error = undefined;
+              console.log(Object.values(data)[0]);
+              this.matches = Object.values(data)[0];
+                this.error = undefined;
       },
       (err) => {
         console.log(err.error.message);

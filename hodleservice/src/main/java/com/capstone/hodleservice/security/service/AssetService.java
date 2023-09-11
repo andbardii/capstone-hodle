@@ -168,6 +168,8 @@ public class AssetService {
 	public Asset updateMarketPrice(Long assetId, Double newMarketPrice) {
 		Asset a = repo.findById(assetId).get();
 		a.setMarketPrice(newMarketPrice);
+		a.setMarketValue(newMarketPrice * a.getAmount());
+		wSvc.updateValue(a.getWalletId(),this.findByWalletId(a.getWalletId()));
 		repo.save(a);
 		return a;
 	}

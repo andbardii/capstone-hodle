@@ -1,22 +1,25 @@
-<div class="col-12 h-100 w-100 m-0">
+<div class="col-12 h-100 w-100 m-0" (click)="error = undefined">
   <div class="row m-0 h-100">
     <div class="col-12 h-100">
-      <div class="row data">
+      <div class="row data" *ngIf="error == undefined">
         <div class="col-3 p-4">
-          <h1 class="name">{{asset['2. Symbol']}}</h1>
+          <h1 class="name">{{asset.symbol}}</h1>
         </div>
         <div class="col-6 p-4">
-          <h1>{{values[yesterday]['4. close'] | number: '1.2-2'}} {{currency}}</h1>
+          <h1>{{values[0].close | number: '1.2-2'}} {{asset.currency}}</h1>
         </div>
         <div class="col-3 p-3">
-          <div class="change p-3" [style.background-color]="((values[yesterday]['4. close']-values[yesterday]['1. open'])*100)/values[yesterday]['1. open'] | togpercent">
-            <h2 class="text-light m-0">{{((values[yesterday]['4. close']-values[yesterday]['1. open'])*100)/values[yesterday]['1. open'] | number: '1.2-2'}}%</h2>
+          <div class="change p-3" [style.background-color]="((values[0].close-values[0].open)*100)/values[0].open| togpercent">
+            <h2 class="text-light m-0">{{((values[0].close-values[0].open)*100)/values[0].open | number: '1.2-2'}}%</h2>
           </div>
         </div>
       </div>
       <div class="row chart">
         <div class="col-12 h-100 p-3">
-          <div class="card p-2 h-100">
+          <div class="err p-2 mt-1" *ngIf="error != undefined">
+            {{error}}
+          </div>
+          <div class="card p-2 h-100" *ngIf="error == undefined">
           <canvas id="assetchart"></canvas>
           </div>
         </div>

@@ -1,4 +1,4 @@
-<div class="col-12 h-100 w-100 m-0">
+<div class="col-12 h-100 w-100 m-0" (click)="error = undefined">
   <div class="row m-0 h-100">
     <div class="col-12 h-100">
       <div class="row h-100">
@@ -19,12 +19,13 @@
         </div>
         <div class="results col-12">
           <div class="row h-100 overflow-auto">
-            <div class="col-6 p-3" *ngFor="let asset of matches">
-              <div class="card asset" [routerLink]="['marketview/' + asset['1. symbol']]">
+            <div class="col-12 p-3" *ngFor="let asset of matches">
+              <div class="card asset" [routerLink]="['marketview/' + asset.symbol]">
                 <div class="card-body">
-                  <h4 class="card-title"><b class="ticker">{{asset['1. symbol']}}</b> ({{asset['2. name']}} )</h4>
-                  <p class="card-text m-0"><b>Type:</b> {{asset['3. type']}}</p>
-                  <p class="card-text"><b>Zone:</b> {{asset['4. region']}}</p>
+                  <h4 class="card-title"><b class="ticker">{{asset.symbol}}</b> ({{asset.instrument_name}} )</h4>
+                  <p class="card-text m-0"><b>Type:</b> {{asset.instrument_type}}</p>
+                  <p class="card-text m-0"><b>Zone:</b> {{asset.country}}</p>
+                  <p class="card-text"><b>Exchange:</b> {{asset.exchange}}</p>
                 </div>
               </div>
             </div>
