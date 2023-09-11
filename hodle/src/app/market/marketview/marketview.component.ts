@@ -110,16 +110,13 @@ export class MarketviewComponent implements OnInit{
     const highd = [];
     const lowd = [];
 
-    let lastkey: string = '';
-
     for (const key in this.values) {
       labelsd.push(key);
       datasd.push(this.values[key]['4. close']);
       highd.push(this.values[key]['2. high']);
       lowd.push(this.values[key]['3. low']);
-      lastkey = key;
     }
-    this.yesterday = lastkey;
+    this.yesterday = labelsd[0];
     this.low = lowd.reverse();
     this.high = highd.reverse();
     this.labels = labelsd.reverse();

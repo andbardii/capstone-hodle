@@ -21,6 +21,15 @@ html, body {
   margin:0;
 }
 
+.err{
+  border: 1px solid darkred;
+  border-radius: 25px;
+  background-color: rgba(159, 0, 0, 0.63);
+  color: white;
+  max-height: 7vh;
+  overflow: auto;
+}
+
 /* Generic media queries. */
 @include media-breakpoint-down(lg) {
   .landing{

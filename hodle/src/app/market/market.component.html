@@ -13,6 +13,9 @@
               </button>
             </div>
           </form>
+          <div class="err p-2 mt-1" *ngIf="error != undefined">
+            {{error}}
+          </div>
         </div>
         <div class="results col-12">
           <div class="row h-100 overflow-auto">

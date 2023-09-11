@@ -1,4 +1,4 @@
-<div class="col-12 h-100 w-100 m-0">
+<div class="col-12 h-100 w-100 m-0" (click)="error = undefined">
   <div class="row m-0 h-100" *ngIf="needwallet == false && postwallet == false && postasset == false && postmove == false && movement == false && maincurrency == false">
     <div class="d-none d-lg-inline col-3 bg-success h-100 p-4">
       <div class="row h-100">
@@ -95,6 +95,9 @@
                   <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
                 </div>
             </form>
+            <div class="err p-2 mt-1" *ngIf="error != undefined">
+              {{error}}
+            </div>
           </div>
         </div>
       </div>
@@ -129,6 +132,9 @@
                   <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
                 </div>
             </form>
+            <div class="err p-2 mt-1" *ngIf="error != undefined">
+              {{error}}
+            </div>
           </div>
         </div>
       </div>
@@ -154,6 +160,9 @@
               </button>
             </div>
           </form>
+          <div class="err p-2 mt-1" *ngIf="error != undefined">
+            {{error}}
+            </div>
           <div class="match my-1 overflow-auto">
             <div class="card p-1" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
               <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
@@ -265,6 +274,9 @@
                   <button class="btn btn-success" type="submit"><b>ADD ASSET</b></button>
                 </div>
             </form>
+            <div class="err p-2 mt-1" *ngIf="error != undefined">
+            {{error}}
+            </div>
           </div>
         </div>
       </div>
@@ -323,6 +335,9 @@
                   <button class="btn btn-success" type="submit"><b>ADD {{currency}}</b></button>
                 </div>
             </form>
+            <div class="err p-2 mt-1" *ngIf="error != undefined">
+              {{error}}
+              </div>
           </div>
           <div class="mt-2" *ngIf="convertcurr == true">
             <div class="row tasset match my-2 overflow-auto">
@@ -375,6 +390,9 @@
                   <button class="btn btn-success" type="submit"><b>CONVERT</b></button>
                 </div>
             </form>
+            <div class="err p-2 mt-1" *ngIf="error != undefined">
+              {{error}}
+              </div>
           </div>
         </div>
       </div>
@@ -459,6 +477,9 @@
                   </button>
                 </div>
               </form>
+              <div class="err p-2 mt-1" *ngIf="error != undefined">
+                {{error}}
+                </div>
               <div class="match my-1 overflow-auto">
                 <div class="card p-1" *ngFor="let asset of matches" (click)="checkAsset(asset)">
                   <p class="m-0"><b>{{asset['1. symbol']}}</b> ({{asset['2. name']}})</p>
@@ -565,6 +586,9 @@
                 </div>
                 </div>
               </form>
+              <div class="err p-2 mt-1" *ngIf="error != undefined">
+                {{error}}
+                </div>
             </div>
           </div>
         </div>
