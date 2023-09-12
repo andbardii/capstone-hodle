@@ -37,3 +37,13 @@ form{
     }
   }
 }
+.watch{
+  background-color: #114f326d;
+  color: whitesmoke;
+  border-radius: 25px;
+  cursor: pointer;
+  &:hover{
+    background-color: white;
+    color: #135938;
+  }
+}

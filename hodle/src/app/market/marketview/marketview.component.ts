@@ -1,6 +1,6 @@
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MarketService } from 'src/app/services/market.service';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables)
@@ -23,18 +23,19 @@ export class MarketviewComponent implements OnInit{
   high:any;
   low:any;
 
-  constructor(private usvc: UserService, private svc: MarketService, private route:ActivatedRoute){}
+  constructor(private usvc: UserService, private svc: MarketService,
+              private route:ActivatedRoute, private router: Router){}
 
   ngOnInit(): void {
-    this.getMarketDailyData();
+    this.getMarketDailyData("1day");
     this.currency = this.usvc.getCurrency();
   }
 
-  getMarketDailyData(){
+  getMarketDailyData(time:string){
     this.route.params
     .subscribe((params:any)=>{
       console.log(params)
-      this.svc.getMarketDailyView(params).subscribe(
+      this.svc.getMarketDailyView(params, time).subscribe(
           (data) => {
           console.log(Object.values(data)[0])
           console.log(Object.values(data)[1])
@@ -43,6 +44,7 @@ export class MarketviewComponent implements OnInit{
           this.getData();
           if(Object.values(data)[0] == 400){
             this.error = "Asset not available for your plan";
+            this.router.navigate(['/market'])
           }else{
             this.error = undefined;
           }
@@ -55,6 +57,11 @@ export class MarketviewComponent implements OnInit{
   }
 
   renderChart(){
+    let existingChart = Chart.getChart("assetchart");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
     const chart = new Chart("assetchart", {
       data: {
         datasets: [

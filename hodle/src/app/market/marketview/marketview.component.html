@@ -19,8 +19,14 @@
           <div class="err p-2 mt-1" *ngIf="error != undefined">
             {{error}}
           </div>
-          <div class="card p-2 h-100" *ngIf="error == undefined">
+          <div class="card p-2" *ngIf="error == undefined">
           <canvas id="assetchart"></canvas>
+          </div>
+          <div class="p-2 pt-3 times text-center">
+            <button class="btn btn-success p-2 px-5" (click)="getMarketDailyData('1h')"><b>1H</b></button>
+            <button class="btn btn-success p-2 px-5 mx-4" (click)="getMarketDailyData('1day')"><b>1D</b></button>
+            <button class="btn btn-success p-2 px-5 me-4" (click)="getMarketDailyData('1week')"><b>1W</b></button>
+            <button class="btn btn-success p-2 px-5" (click)="getMarketDailyData('1month')"><b>1M</b></button>
           </div>
         </div>
       </div>

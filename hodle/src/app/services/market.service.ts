@@ -23,12 +23,12 @@ export class MarketService {
       });
   }
 
-  getMarketDailyView(params: any) {
+  getMarketDailyView(params: any, time:string) {
     console.log(Object.values(params));
     this.headers = this.headers.set('X-RapidAPI-Host', 'twelve-data1.p.rapidapi.com')
                                .set('X-RapidAPI-Key', 'f4620064b9mshdb8d1bb25f138ebp15508ajsn932fd197513a');
 
-    return this.http.get('https://twelve-data1.p.rapidapi.com/time_series?symbol=' + Object.values(params) + '&interval=1day&outputsize=100&format=json', {
+    return this.http.get('https://twelve-data1.p.rapidapi.com/time_series?symbol=' + Object.values(params) + '&interval=' + time + '&outputsize=100&format=json', {
         headers: this.headers
     });
   }

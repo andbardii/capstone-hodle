@@ -1,6 +1,20 @@
 <div class="col-12 h-100 w-100 m-0" (click)="error = undefined">
   <div class="row m-0 h-100">
-    <div class="col-12 h-100">
+    <div class="d-none d-lg-inline col-3 bg-success h-100 p-4">
+      <div class="row h-100">
+        <div class="col-12 p-3 h-100 overflow-auto">
+          <h3 class="text-light mb-2 text-center"><b>WATCHLIST</b></h3>
+          <div *ngFor="let asset of assets" >
+            <div class="watch p-2 mb-2" *ngIf="asset.ticker != currency" [routerLink]="['marketview/' + asset.ticker]">
+              <p class="m-0 ps-3">
+                {{asset.ticker}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-9 h-100">
       <div class="row h-100">
         <div class="col-12 upmzone p-4">
           <form #f="ngForm" (ngSubmit)="onSubmit()">

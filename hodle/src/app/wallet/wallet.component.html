@@ -111,10 +111,6 @@
             <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
           </svg>
         </div>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="#198753" class="bi bi-wallet2" viewBox="0 0 16 16">
-          <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
-        </svg>
         <div class="card-body">
           <h4 class="card-title"><b>CREATE WALLET</b></h4>
           <div class="mt-2">
@@ -292,9 +288,9 @@
         </div>
         <div class="card-body">
           <div class="add">
-            <button class="btn btn-success" (click)=" depositcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>DEPOSIT {{currency}}</b></button>
+            <button class="btn btn-success border border-success" (click)=" depositcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>DEPOSIT {{currency}}</b></button>
            <div *ngIf="currexist == false" class="d-inline">
-            <button class="btn btn-success" (click)=" convertcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>CONVERT TO {{currency}}</b></button>
+            <button class="btn btn-success border border-success" (click)=" convertcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>CONVERT TO {{currency}}</b></button>
            </div>
           </div>
           <div class="mt-2" *ngIf="depositcurr == true">
@@ -411,9 +407,9 @@
         <div class="card-body">
           <div class="add h-25">
             <h4 class="card-title text-center"><b>MOVE YOUR FUNDS</b></h4>
-            <button class="btn border border-success" (click)="incoming = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">INCOMING</button>
-            <button class="btn border border-success" (click)="outgoing = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">OUTGOING</button>
-            <button class="btn border border-success" (click)="transfer = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">TRANSFER</button>
+            <button class="btn border border-success bolder" (click)="incoming = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">INCOMING</button>
+            <button class="btn border border-success mx-1" (click)="outgoing = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">OUTGOING</button>
+            <button class="btn border border-success me-1" (click)="transfer = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">TRANSFER</button>
             <button class="btn border border-success" (click)="convert = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">CONVERT</button>
           </div>
 
