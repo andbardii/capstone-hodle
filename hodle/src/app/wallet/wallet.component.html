@@ -288,9 +288,11 @@
         </div>
         <div class="card-body">
           <div class="add">
-            <button class="btn btn-success border border-success" (click)=" depositcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>DEPOSIT {{currency}}</b></button>
-           <div *ngIf="currexist == false" class="d-inline">
-            <button class="btn btn-success border border-success" (click)=" convertcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>CONVERT TO {{currency}}</b></button>
+            <div *ngIf="currexist == true" class="d-inline">
+              <button class="btn btn-success border border-success" (click)=" convertcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>CONVERT TO {{currency}}</b></button>
+            </div>
+            <div *ngIf="currexist == false" class="d-inline">
+             <button class="btn btn-success border border-success" (click)=" depositcurr = true" *ngIf="depositcurr == false && convertcurr == false"><b>DEPOSIT {{currency}}</b></button>
            </div>
           </div>
           <div class="mt-2" *ngIf="depositcurr == true">

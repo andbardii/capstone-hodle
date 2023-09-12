@@ -72,4 +72,18 @@ export class MarketComponent implements OnInit{
     )
   }
 
+  checkAndGiveS(symbol: string | undefined): string {
+    if(symbol!.includes("/")){
+      let s = symbol!.replace("/", "@");
+      console.log(s);
+      return s;
+    }else if(symbol!.includes("@")){
+      let s = symbol!.replace("@", "/");
+      console.log(s);
+      return s;
+    }else{
+      console.log(symbol)
+      return symbol!;
+    }
+  }
 }

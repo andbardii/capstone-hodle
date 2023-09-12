@@ -21,6 +21,8 @@ public class WalletService {
 	
 	@Autowired WalletRepository repo;
 	
+	@Autowired PointService psvc;
+	
 	@Autowired @Qualifier("wallet") private ObjectProvider<Wallet> provider;
 	
 	//POST METHODS
@@ -54,13 +56,16 @@ public class WalletService {
 	//PUT METHODS
 	public Wallet updateValue(Long walletId, List<Asset> l) {
 		Double value = 0.00;
+		Double limit = 0.00;
 		for(Asset a: l) {
 			value = value + a.getMarketValue();
+			limit = limit + (a.getAmount() * a.getAveragePurchasePrice());
 		}
 		
 		Wallet w = repo.findById(walletId).get();
 		w.setValue(value);
 		repo.save(w);
+		this.psvc.handlePoint(walletId, limit, l);
 		return w;
 	}
 	

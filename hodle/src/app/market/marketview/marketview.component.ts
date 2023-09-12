@@ -44,7 +44,7 @@ export class MarketviewComponent implements OnInit{
           this.getData();
           if(Object.values(data)[0] == 400){
             this.error = "Asset not available for your plan";
-            this.router.navigate(['/market'])
+            // this.router.navigate(['/market'])
           }else{
             this.error = undefined;
           }
