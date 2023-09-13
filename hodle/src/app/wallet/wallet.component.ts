@@ -107,18 +107,28 @@ export class WalletComponent implements OnInit {
   }
 
   onSubmitAsset() {
-          this.asvc.addAsset(this.aform.value).subscribe(
-                (resp) => {
-                  console.log(resp);
-                  this.error = undefined;
-                  this.postasset = false;
-                  this.findByUser();
-                  this.aform.reset();
-                }, (err) => {
-                  console.log(err.error.message);
-                  this.error = err.error.message;
-                }
-              );
+    let ok:boolean = true;
+    for (let i = 0; i < this.assets.length; i++) {
+      if(this.aform.value.ticker == this.assets[i].ticker &&
+         this.aform.value.intermediary != this.assets[i].intermediary) {
+          ok = false;
+          this.error = 'You must select '+ this.assets[i].intermediary +'for Intermediary, otherwise you can create a new Wallet!'
+      }
+    }
+    if (ok){
+      this.asvc.addAsset(this.aform.value).subscribe(
+        (resp) => {
+          console.log(resp);
+          this.error = undefined;
+          this.postasset = false;
+          this.findByUser();
+          this.aform.reset();
+        }, (err) => {
+          console.log(err.error.message);
+          this.error = err.error.message;
+        }
+      );
+    }else{}
   }
 
   depositMainCurrency() {

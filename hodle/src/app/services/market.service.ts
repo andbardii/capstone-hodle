@@ -24,7 +24,7 @@ export class MarketService {
   }
 
   getMarketDailyView(params: any, time:string) {
-    console.log(params);
+    console.log(this.checkAndGiveS(JSON.stringify(Object.values(params))));
     this.headers = this.headers.set('X-RapidAPI-Host', 'twelve-data1.p.rapidapi.com')
                                .set('X-RapidAPI-Key', 'f4620064b9mshdb8d1bb25f138ebp15508ajsn932fd197513a');
 
@@ -55,9 +55,9 @@ export class MarketService {
       console.log(s);
       return s;
     }else{
-      console.log(symbol)
       let s = symbol;
       s = s!.replace(/\[|\]/g, '');
+      s = s!.replace(/[, ]/g, '');
       s = s!.replace(/"/g, '');
       return s!;
     }

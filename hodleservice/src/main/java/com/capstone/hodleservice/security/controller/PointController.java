@@ -10,11 +10,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capstone.hodleservice.security.entity.Asset;
 import com.capstone.hodleservice.security.entity.Point;
+import com.capstone.hodleservice.security.entity.Todo;
+import com.capstone.hodleservice.security.entity.Wallet;
+import com.capstone.hodleservice.security.enumerated.WalletType;
 import com.capstone.hodleservice.security.service.PointService;
 
 @RestController
@@ -46,6 +52,23 @@ public class PointController {
 		public ResponseEntity<?> findByWalletIdAndDate(@PathVariable Long walletId, @PathVariable LocalDate date) {
 			Point p = svc.findByWalletIdAndDate(walletId, date);
 			ResponseEntity<Point> resp = new ResponseEntity<Point>(p, HttpStatus.OK);
+			return resp;
+		}
+		
+		//POST METHODS
+		@PostMapping("/add")
+	    @PreAuthorize("isAuthenticated()")
+	    public ResponseEntity<?> addPoint(@RequestBody Point point) {
+	        Point p = svc.generatePoint(point);
+	        return new ResponseEntity<Point>(p, HttpStatus.CREATED);
+	    }
+		
+		//PUT METHODS
+		@PutMapping("/complete/{pointId}/{value}/{high}/{low}")
+		@PreAuthorize("isAuthenticated()")
+		public ResponseEntity<?> completePoint(@PathVariable Long pointId, @PathVariable Double value, @PathVariable Double high, @PathVariable Double low) {
+			Point a = svc.completePoint(pointId, value, high, low);
+			ResponseEntity<Point> resp = new ResponseEntity<Point>(a, HttpStatus.OK);
 			return resp;
 		}
 }

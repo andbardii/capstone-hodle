@@ -37,6 +37,21 @@ public class PointService {
 		return p;
 	}
 	
+	public Point generatePoint(Point point) {
+		Point p = provider.getObject().builder()
+				  .date(point.getDate())
+				  .walletId(point.getWalletId())
+				  .invested(point.getInvested())
+				  .assets(point.getAssets())
+				  .value(point.getValue())
+				  .high(point.getHigh())
+				  .low(point.getLow())
+				  .build();
+		repo.save(p);
+		log.info("Point generated for wallet Id: " + point.getWalletId());
+		return p;
+	}
+	
 	// GET METHODS
 	public Point findById(long id) {
 		Point p = repo.findById(id).get();
@@ -54,6 +69,17 @@ public class PointService {
 		log.info(p.toString());
 		return p;
 	}
+	
+	// PUT METHODS
+	public Point completePoint(Long pointId, Double value, Double high, Double low) {
+		Point p = repo.findById(pointId).get();
+		p.setValue(value);
+		p.setHigh(high);
+		p.setLow(low);
+		repo.save(p);
+		return p;
+	}
+	
 	// OTHER METHODS
 	public Point handlePoint(Long walletId, Double limit, List<Asset> assets) {
 		

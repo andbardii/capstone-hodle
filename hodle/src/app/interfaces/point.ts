@@ -4,7 +4,7 @@ export interface Point {
 	id?: number;
 	walletId?: number;
 	assets?: Asset[];
-  date?: Date;
+  date?: string;
   invested?: number;
   value?: number;
   high?: number;
