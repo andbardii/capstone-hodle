@@ -45,4 +45,12 @@ export class PointService {
     return this.http.get<Point>('http://localhost:8080/api/point/bywallet/'+ walletId + '/' + date , {headers: this.headers})
   }
 
+  existByWalletAndDate(walletId:any, date:string){
+    this.headers = this.headers.set(
+      'Authorization',
+      'Bearer ' + this.usvc.getToken()
+    );
+    return this.http.get<Boolean>('http://localhost:8080/api/point/exist/'+ walletId + '/' + date , {headers: this.headers})
+  }
+
 }

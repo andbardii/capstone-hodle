@@ -7,6 +7,10 @@ import { MarketService } from '../services/market.service';
 import { UserService } from '../services/user.service';
 import { WalletService } from '../services/wallet.service';
 import { BehaviorSubject } from 'rxjs';
+import { Chart, registerables } from 'chart.js';
+import { Wallet } from '../interfaces/wallet';
+import { identifierName } from '@angular/compiler';
+Chart.register(...registerables)
 
 @Component({
   selector: 'app-home',
@@ -22,11 +26,15 @@ export class HomeComponent {
   dailydata:any[] = [];
   wpoints:Point[][] = [];
 
+  point:Point = {}
+  dates: string[] = [] ;
+
   constructor(private ptsvc: PointService, private ursvc: UserService,
               private wtsvc: WalletService, private router:Router,
               private mksvc: MarketService, private atsvc: AssetService){}
 
   ngOnInit() {
+    this.dates = this.getDates();
     this.getValuesAndPoints()
     this.pro$.subscribe(
       (res) => {
@@ -35,6 +43,7 @@ export class HomeComponent {
         }
       }
     )
+
   }
 
   getValuesAndPoints(){
@@ -173,51 +182,227 @@ export class HomeComponent {
               console.log(value, high, low);
               continue;
             }
-            // PER OGNI SERIE DI VALORI PRECEDENTEMENTE SALVATA
             console.log(this.dailydata.length)
+            // PER OGNI SERIE DI VALORI PRECEDENTEMENTE SALVATA
             for(let n = 0; n < this.dailydata.length; n++){
-              // SE ABBIAMO I SUOI VALORI SALVATI
               console.log(this.dailydata[n].meta);
+              // SE ABBIAMO I SUOI VALORI SALVATI
               if(this.dailydata[n].meta.symbol == symbol){
-                // PER OGNI GIORNO
                 console.log(this.dailydata[n].values);
                 console.log(Object.values(this.dailydata[n].values).length);
+                let dex: number = 0;
+                // PER OGNI GIORNO
                 for(let r = 0; r < Object.values(this.dailydata[n].values).length; r++){
-                  // SE CE UN GIORNO CORRISPONDENTE
                   console.log(this.dailydata[n].values[r].datetime, date);
+
+                  // SE IL UN GIORNO CORRISPONDE
                   if(this.dailydata[n].values[r].datetime == date){
                     console.log(amount)
-                    console.log( value )
+                    console.log(value)
                     value = value + (this.dailydata[n].values[r].close * amount);
                     high =  high + (this.dailydata[n].values[r].high * amount);
                     low =  low + (this.dailydata[n].values[r].low * amount);
                     console.log(value, high, low);
-                  }// else{
-                    // // SE IL GIORNO E ASSENTE
-                    // value = value + price
-                    // high = high + price
-                    // low = low + price
-                  // }
+                  // SE IL GIORNO NON CORRISPONDE
+                  }else{
+                    dex = dex + 1;
+                  }
+                  // SE IL GIORNO NON E PRESENTE NEI VALORI SALVATI
+                  if(dex == 100){
+                    value = value + price
+                    high = high + price
+                    low = low + price
+                  }
                 }
               }
 
             }
           }
           console.log(value, high, low)
-          // this.ptsvc.completePoint(id, value, high, low).subscribe(
-          //   (resp) => {
-          //     console.log(resp);
-          //     this.error = undefined;
-          //   },
-          //   (err) => {
-          //     console.log(err.error.message);
-          //     this.error = err.error.message;
-          //   }
-          // )
+          this.ptsvc.completePoint(id, value, high, low).subscribe(
+            (resp) => {
+              console.log(resp);
+              this.error = undefined;
+            },
+            (err) => {
+              console.log(err.error.message);
+              this.error = err.error.message;
+            }
+          )
         }else{
           console.log('Point already completed');
         }
       }
     }
+    this.createMissingPoints();
   }
+
+  createMissingPoints(){
+    //! CERCA TUTTI I WALLET DELL'UTENTE
+    this.wtsvc.findByUser().subscribe(
+      (resp) => {
+        console.log(resp);
+        let wallets:Wallet[] = resp;
+        // PER OGNI WALLET DELL'UTENTE
+        for(let e = 0; e < wallets.length; e++){
+          // PER GLI ULTIMI 100 GIORNI A PARTIRE DA IERI
+          for(let f = 0; f < this.dates.length; f++){
+            //! CONTROLLA SE ESISTE PUNTO CON WALLET ID E DATA
+            this.ptsvc.existByWalletAndDate(wallets[e].id, this.dates[f]).subscribe(
+              (resp) => {
+                console.log(resp);
+                let exist:Boolean = resp;
+                //? SE ESITE IL PUNTO
+                if(exist){
+                  console.log("Point already exists")
+                }else{
+                //? SE NON ESISTE IL PUNTO
+                //! CERCA I PUNTI DEL WALLET
+                this.ptsvc.findByWallet(wallets[e].id).subscribe(
+                  (resp) => {
+                    console.log(resp);
+                    let punti:Point[] = resp;
+                    //* ORDINA LE DATE NELL'ARRAY
+                    punti = punti.sort((a, b) => a.date!.localeCompare(b.date!));
+                    //* CERCA LA PRIMA DATA PRECEDETE DISPONIBILE
+                    let before: Point | null = this.findNearestPreviousPoint(this.dates[f], punti)
+                      //? SE NON CE UNA DATA PRECEDENTE
+                      if(before == null){
+                        //* IMPORSTA VALORI A 0
+                        this.point.date = this.dates[f];
+                        this.point.invested = 0.00;
+                        this.point.high = 0.00;
+                        this.point.low = 0.00;
+                        this.point.value = 0.00;
+                        this.point.walletId = wallets[e].id;
+                        //! LANCIA CHIAMATA POST CON PUNTO COMPLETO
+                        this.ptsvc.addPoint(this.point).subscribe(
+                          (resp) => {
+                            console.log(resp);
+                            this.point = {};
+                            this.error = undefined;
+                          },
+                          (err) => {
+                            console.log(err.error.message);
+                            this.error = err.error.message;
+                          }
+                        )
+                      //? SE CE UNA DATA PRECEDENTE
+                      }else{
+                        //* IMPOSTA ASSETS DEL PUNTO UGUALI ALLA DATA PRECEDENTE
+                        this.point.assets = before.assets;
+                        this.point.invested = before.invested;
+                        this.point.walletId = wallets[e].id;
+                        this.point.date = this.dates[f];
+                        // PER OGNI ASSET NEL NUOVO PUNTO
+                        for(let o = 0; o < this.point.assets!.length; o++){
+                          //? SE L'ASSET E LA CURRENCY PRINCIPALE
+                          if(this.point.assets![o].ticker == this.ursvc.getCurrency()){
+                            //* IMPOSTA VALUE, HIGH, LOW
+                            this.point.high = this.point.high! + this.point.assets![o].amount!;
+                            this.point.low = this.point.low! + this.point.assets![o].amount!;
+                            this.point.value = this.point.value! + this.point.assets![o].amount!;
+                          //? SE L'ASSET NON E LA CURRENCY PRINCIPALE
+                          }else{
+                            // PER OGNI SERIE DI DATI VALORI SALVATI
+                            for(let u = 0; u < this.dailydata.length; u++){
+                              //? SE L'ASSET CORRISPONDE
+                              if(this.dailydata[u].meta.symbol == this.point.assets![o].ticker){
+                                // PER OGNI DATA NELLA SERIE
+                                for(let h = 0; h < Object.values(this.dailydata[u].values).length; h++){
+                                  //? SE LA DATA E TRACCIATA
+                                  if(this.dailydata[u].values[h].datetime == this.point.date){
+                                    //* PRENDI I PREZZI DALLA DATA PRECISA E IMPOSTA VALUE, HIGH, LOW
+                                    this.point.value = this.point.value! + (this.point.assets![o].amount! * this.dailydata[u].values[h].close);
+                                    this.point.high = this.point.value! + (this.point.assets![o].amount! * this.dailydata[u].values[h].high);
+                                    this.point.low = this.point.value! + (this.point.assets![o].amount! * this.dailydata[u].values[h].low);
+                                  //? SE LA DATA NON E TRACCIATA
+                                  }else{
+                                    //* PRENDI I PREZZI DALLA DATA PRECEDENTE E IMPOSTA, VALUE, HIGH, LOW
+                                    this.point.value = this.point.value! + (this.point.assets![o].amount! * this.point.assets![o].marketPrice!);
+                                    this.point.high = this.point.value! + (this.point.assets![o].amount! * this.point.assets![o].marketPrice!);
+                                    this.point.low = this.point.value! + (this.point.assets![o].amount! * this.point.assets![o].marketPrice!);
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                        //! LANCIA CHIAMATA POST CON PUNTO COMPLETO
+                        this.ptsvc.addPoint(this.point).subscribe(
+                          (resp) => {
+                            console.log(resp);
+                            this.point = {};
+                            this.error = undefined;
+                          },
+                          (err) => {
+                            console.log(err.error.message);
+                            this.error = err.error.message;
+                          }
+                        )
+                      }
+                    this.error = undefined;
+                  },
+                  (err) => {
+                    console.log(err.error.message);
+                    this.error = err.error.message;
+                  }
+                )
+                }
+                this.error = undefined;
+              },
+              (err) => {
+                console.log(err.error.message);
+                this.error = err.error.message;
+              }
+            )
+          }
+        }
+          this.error = undefined;
+        },
+        (err) => {
+          console.log(err.error.message);
+          this.error = err.error.message;
+        }
+      );
+
+
+  }
+
+//! UTIL METHODS
+  // GET LAST 100 DATES
+  private getDates(): string[] {
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() - 1);
+
+    const datesArray: string[] = [];
+
+    for (let i = 0; i < 100; i++) {
+      const date = new Date(endDate);
+      date.setDate(endDate.getDate() - i);
+      const dateString = this.formatDate(date);
+      datesArray.push(dateString);
+    }
+
+    return datesArray;
+  }
+  // FORMAT DATES
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private findNearestPreviousPoint(date: string, points: Point[]): Point | null {
+    points.sort((a, b) => a.date!.localeCompare(b.date!));
+    for (let i = points.length - 1; i >= 0; i--) {
+      if (points[i].date! < date) {
+        return points[i];
+      }
+    }
+    return null;
+  }
+
 }

@@ -47,11 +47,19 @@ public class PointController {
 			return resp;
 		}
 
-		@GetMapping("/bydate/{walletId}")
+		@GetMapping("/bydate/{walletId}/{date}")
 		@PreAuthorize("isAuthenticated()")
 		public ResponseEntity<?> findByWalletIdAndDate(@PathVariable Long walletId, @PathVariable LocalDate date) {
 			Point p = svc.findByWalletIdAndDate(walletId, date);
 			ResponseEntity<Point> resp = new ResponseEntity<Point>(p, HttpStatus.OK);
+			return resp;
+		}
+		
+		@GetMapping("/exist/{walletId}/{date}")
+		@PreAuthorize("isAuthenticated()")
+		public ResponseEntity<?> existByWalletIdAndDate(@PathVariable Long walletId, @PathVariable LocalDate date) {
+			Boolean e = (Boolean)svc.existsByWalletAndDate(walletId, date);
+			ResponseEntity<Boolean> resp = new ResponseEntity<Boolean>(e, HttpStatus.OK);
 			return resp;
 		}
 		

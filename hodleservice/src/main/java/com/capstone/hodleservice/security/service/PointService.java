@@ -70,6 +70,10 @@ public class PointService {
 		return p;
 	}
 	
+	public boolean existsByWalletAndDate(Long walletId, LocalDate date) {
+		return repo.existsByWalletIdAndDate(walletId, date);
+	}
+	
 	// PUT METHODS
 	public Point completePoint(Long pointId, Double value, Double high, Double low) {
 		Point p = repo.findById(pointId).get();

@@ -10,6 +10,8 @@ import { MovementService } from '../services/movement.service';
 import { UserService } from '../services/user.service';
 import { Assettype } from '../enumerated/assettype';
 import { Assetclass } from '../enumerated/assetclass';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables)
 
 @Component({
   selector: 'app-wallet',
@@ -234,7 +236,7 @@ export class WalletComponent implements OnInit {
           }else{
             index = 10
           }
-        this.asset.marketPrice = Object.values(resp)[10];
+        this.asset.marketPrice = Object.values(resp)[index];
       }, (err) => {
         console.log(err.error.message);
         this.error = err.error.message;
@@ -254,7 +256,7 @@ export class WalletComponent implements OnInit {
         this.assets = resp;
         console.log(this.assets);
         this.error = undefined;
-        this.updatePrice();
+        // this.updatePrice();
         this.checkCurrency();
       }, (err) => {
         console.log(err.error.message);
@@ -286,6 +288,7 @@ export class WalletComponent implements OnInit {
   }
 
   checkCurrency() {
+    this.currexist = false;
     for(let i = 0; i < this.assets.length; i++){
       if (this.assets[i].ticker == this.currency) {
         this.currexist = true;
@@ -396,6 +399,7 @@ export class WalletComponent implements OnInit {
               index = 10
             }
               this.asset.marketPrice = Object.values(resp)[index];
+              console.log(this.asset.marketPrice)
             if(Object.values(resp)[0] == 400){
               this.error = "Asset not available for your plan";
             }else{
@@ -475,6 +479,68 @@ export class WalletComponent implements OnInit {
        this.maincurrency = false;
       }
   }
+
+  // renderChart(){
+  //   let existingChart = Chart.getChart("walletchart");
+  //   if (existingChart) {
+  //     existingChart.destroy();
+  //   }
+
+  //   const chart = new Chart("walletchart", {
+  //     data: {
+  //       datasets: [
+  //       {
+  //         type: 'line',
+  //         label: 'low',
+  //         data: this.low,
+  //         borderColor: '#FF0100',
+  //         tension: 0.1
+  //       },
+  //       {
+  //         type: 'line',
+  //         label: 'price',
+  //         data: this.datas,
+  //         borderColor: '#cccccc',
+  //         tension: 0.1
+  //       },
+  //       {
+  //         type: 'line',
+  //         label: 'high',
+  //         data: this.high,
+  //         borderColor: '#167a4c',
+  //         tension: 0.1
+  //       }],
+  //     labels: this.labels
+  //     },
+  //     options: {
+  //       scales: {
+  //         y: {
+  //           beginAtZero: false
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
+  // getData(){
+
+  //   const labelsd = [];
+  //   const datasd = [];
+  //   const highd = [];
+  //   const lowd = [];
+
+  //   for (const key in this.values) {
+  //     labelsd.push(this.values[key].datetime);
+  //     datasd.push(this.values[key].close);
+  //     highd.push(this.values[key].high);
+  //     lowd.push(this.values[key].low);
+  //   }
+  //   this.low = lowd.reverse();
+  //   this.high = highd.reverse();
+  //   this.labels = labelsd.reverse();
+  //   this.datas = datasd.reverse();
+  //   this.renderChart();
+  // }
 
 
 }
