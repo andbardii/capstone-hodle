@@ -562,7 +562,7 @@ export class HomeComponent {
     let marged:Point[] = this.values[0];
 
     if(this.values.length > 1) {
-      console.log('IM HEREEEEEEEE', this.values.length)
+      console.log(this.values.length)
       for(let i = 1; i < this.values.length; i++){
         console.log(Object.values(this.values[i]).length)
         for(let j = 0; j < Object.values(this.values[i]).length; j++){
