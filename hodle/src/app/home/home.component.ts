@@ -1,3 +1,5 @@
+import { BehaviorSubject } from 'rxjs';
+import { Wallet } from '../interfaces/wallet';
 import { Component } from '@angular/core';
 import { Point } from '../interfaces/point';
 import { PointService } from '../services/point.service';
@@ -6,10 +8,7 @@ import { AssetService } from '../services/asset.service';
 import { MarketService } from '../services/market.service';
 import { UserService } from '../services/user.service';
 import { WalletService } from '../services/wallet.service';
-import { BehaviorSubject } from 'rxjs';
 import { Chart, registerables } from 'chart.js';
-import { Wallet } from '../interfaces/wallet';
-import { identifierName } from '@angular/compiler';
 Chart.register(...registerables)
 
 @Component({
@@ -23,11 +22,17 @@ export class HomeComponent {
   proSubj = new BehaviorSubject<boolean>(false);
   pro$ = this.proSubj.asObservable();
 
+  setSubj = new BehaviorSubject<boolean>(false);
+  set$ = this.setSubj.asObservable();
+
   dailydata:any[] = [];
   wpoints:Point[][] = [];
 
   point:Point = {}
   dates: string[] = [] ;
+
+  wind:number = 0;
+  aind:number = 0;
 
   constructor(private ptsvc: PointService, private ursvc: UserService,
               private wtsvc: WalletService, private router:Router,
@@ -35,18 +40,38 @@ export class HomeComponent {
 
   ngOnInit() {
     this.dates = this.getDates();
-    this.getValuesAndPoints()
+
+    this.getValues();
     this.pro$.subscribe(
       (res) => {
-        if(res === true){
-          this.completeExistingPoints();
-        }
-      }
-    )
-
+        if(res){
+          console.log(res);
+          console.log(this.dailydata)
+          console.log(this.wpoints)
+          setTimeout(() => {
+            this.getPoints();
+          }, 1000);
+          this.set$.subscribe(
+            (ris) => {
+              if(ris){
+                console.log(ris);
+                console.log(this.dailydata)
+                console.log(this.wpoints)
+                setTimeout(() => {
+                  this.completeExistingPoints();
+                }, 1000);
+                setTimeout(() => {
+                  this.createMissingPoints();
+                }, 1000);
+              }
+            }
+                )
+              }
+            }
+            );
   }
 
-  getValuesAndPoints(){
+  getValues(){
     // CERCA TUTTI I WALLET DELL'UTENTE
     this.wtsvc.findByUser().subscribe(
       (resp) => {
@@ -73,20 +98,23 @@ export class HomeComponent {
                           this.proSubj.next(true);
                           console.log(this.pro$);
                         }
-                        continue;
                       }else{
                         // SE I VALORI SONO GIA NELL'ARRAY DI DATI ALLORA NON FARE LA CHIAMATA
                         let exist = false;
-                        console.log(Object.values(this.dailydata).length);
-                        for(let b = 0; b < Object.values(this.dailydata).length; b++){
+                        console.log(this.dailydata);
+                        for(let b = 0; b < this.dailydata.length; b++){
                           if(this.dailydata[b].meta.symbol == assets[a].ticker){
                             exist = true;
+                            if(assets[a].id == assets[assets.length-1].id && wallets[i].id == wallets[wallets.length-1].id){
+                              this.proSubj.next(true);
+                              console.log(this.pro$);
+                            }
                             console.log('Asset already saved');
                           }
                         }
                         if(!exist){
                           // CERCA IL VALORE DELL'ASSET NEGLI ULTIMI 100 GIORNI
-                          this.mksvc.getMarketDailyView(assets[a].ticker, '1day').subscribe(
+                          this.mksvc.getMarketData(assets[a].ticker, '1day').subscribe(
                             (resp) => {
                               console.log(resp);
                               // INSERISCO L'OGGETTO CONTENENTE I 100 VALORI IN UN ARRAY
@@ -113,21 +141,21 @@ export class HomeComponent {
                   }
             )
           }
-          // PER OGNI WALLET (PONITS HANDLER)
-          for (let z = 0; z < wallets.length; z++){
-            // CERCA TUTTI I PUNTI LEGATI AL WALLET
-            this.ptsvc.findByWallet(wallets[z].id).subscribe(
-                (resp) => {
-                  console.log(resp)
-                  this.wpoints.push(resp);
-                  console.log(this.wpoints);
-                  this.error = undefined;
-                }, (err) => {
-                  console.log(err.error.message);
-                  this.error = err.error.message;
-                }
-              )
-          }
+          // // PER OGNI WALLET (PONITS HANDLER)
+          // for (let z = 0; z < wallets.length; z++){
+          //   // CERCA TUTTI I PUNTI LEGATI AL WALLET
+          //   this.ptsvc.findByWallet(wallets[z].id).subscribe(
+          //       (resp) => {
+          //         console.log(resp)
+          //         this.wpoints.push(resp);
+          //         console.log(this.wpoints);
+          //         this.error = undefined;
+          //       }, (err) => {
+          //         console.log(err.error.message);
+          //         this.error = err.error.message;
+          //       }
+          //     )
+          // }
 
           this.error = undefined;
         }
@@ -138,22 +166,60 @@ export class HomeComponent {
     )
   }
 
-  completeExistingPoints(){
-    console.log(this.dailydata)
-    console.log(this.wpoints)
+  getPoints(){
+    this.wtsvc.findByUser().subscribe(
+      (resp) => {
+                console.log(resp)
+                let wats:Wallet[] = resp;
+                let indexx = 0;
+               // PER OGNI WALLET (PONITS HANDLER)
+              for (let z = 0; z < wats.length; z++){
+              // CERCA TUTTI I PUNTI LEGATI AL WALLET
+              this.ptsvc.findByWallet(wats[z].id).subscribe(
+                (resp) => {
+                  console.log(resp)
+                  this.wpoints.push(resp);
+                  console.log(this.wpoints);
+                  this.error = undefined;
+                  indexx++;
+                  if(indexx == wats.length){
+                    this.setSubj.next(true);
+                    console.log(this.set$);
+                  }
+                }, (err) => {
+                  console.log(err.error.message);
+                  this.error = err.error.message;
+                }
+              )
+          }
+                this.error = undefined;
+      }, (err) => {
+                console.log(err.error.message);
+                this.error = err.error.message;
+              }
+    )
 
+  }
+
+  completeExistingPoints(){
+    console.log(this.wpoints)
+    console.log('qqqq',this.dailydata)
     // PER OGNI ARRAY DI PUNTI
-    console.log(this.wpoints.length);
+
+    console.error(this.wpoints.length);
+    console.error('aaaaa',this.dailydata.length);
+
     for(let h = 0; h < this.wpoints.length; h++){
       // PER OGNI PUNTO
       console.log(this.wpoints[h].length);
-      console.log(this.wpoints[h]);
+      console.log(this.wpoints.length);
       for(let j = 0; j < this.wpoints[h].length; j++){
         const nd = new Date();
         const year = nd.getFullYear();
         const month = String(nd.getMonth() + 1).padStart(2, '0');
         const day = String(nd.getDate()).padStart(2, '0');
         const today = `${year}-${month}-${day}`;
+        console.log(today)
         // SE IL PUNTO E DI OGGI PASSA AL PROSSIMO
         console.log(this.wpoints[h][j]);
         if(this.wpoints[h][j].date == today){
@@ -172,6 +238,10 @@ export class HomeComponent {
           console.log(this.wpoints[h][j].assets!.length)
           for(let k = 0; k < this.wpoints[h][j].assets!.length; k++){
             let symbol = this.wpoints[h][j].assets![k].ticker;
+            console.log(this.wpoints[h][j].assets![k].ticker)
+            console.log(this.wpoints[h][j].assets![k].amount)
+            console.log(this.wpoints[h][j].assets![k].marketValue)
+
             let amount:any = this.wpoints[h][j].assets![k].amount;
             let price:any = this.wpoints[h][j].assets![k].marketValue;
             // SE L'ASSET E UGUALE ALLA CURRENCY PRINCIPALE BLOCCA
@@ -231,10 +301,10 @@ export class HomeComponent {
           )
         }else{
           console.log('Point already completed');
+          continue;
         }
       }
     }
-    this.createMissingPoints();
   }
 
   createMissingPoints(){

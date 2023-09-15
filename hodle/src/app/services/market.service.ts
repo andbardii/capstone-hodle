@@ -33,6 +33,16 @@ export class MarketService {
     });
   }
 
+  getMarketData(params: any, time:string) {
+    console.log(params);
+    this.headers = this.headers.set('X-RapidAPI-Host', 'twelve-data1.p.rapidapi.com')
+                               .set('X-RapidAPI-Key', 'f4620064b9mshdb8d1bb25f138ebp15508ajsn932fd197513a');
+
+    return this.http.get('https://twelve-data1.p.rapidapi.com/time_series?symbol=' + params + '&interval=' + time + '&outputsize=100&format=json', {
+        headers: this.headers
+    });
+  }
+
   getMarketAssetQuote(params: any){
     console.log(params);
     this.headers = this.headers.set('X-RapidAPI-Host', 'twelve-data1.p.rapidapi.com')
