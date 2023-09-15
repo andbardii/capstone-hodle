@@ -572,9 +572,9 @@ export class HomeComponent {
            if(this.values[i][j].date == marged[k].date){
             console.log(marged[k].invested, this.values[i][j].invested)
             marged[k].invested = marged[k].invested + this.values[i][j].invested;
-            marged[k].high = marged[k].invested + this.values[i][j].high;
-            marged[k].low = marged[k].invested + this.values[i][j].low;
-            marged[k].value = marged[k].invested + this.values[i][j].value;
+            marged[k].high = marged[k].high + this.values[i][j].high;
+            marged[k].low = marged[k].low + this.values[i][j].low;
+            marged[k].value = marged[k].value + this.values[i][j].value;
            }
           }
         }
