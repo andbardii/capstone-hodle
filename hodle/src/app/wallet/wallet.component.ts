@@ -1,3 +1,4 @@
+import { PointService } from './../services/point.service';
 import { AssetService } from './../services/asset.service';
 import { MarketService } from './../services/market.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -60,9 +61,15 @@ export class WalletComponent implements OnInit {
   asset: Asset = {};
   assets: Asset[] = [];
 
+  low: any[] = [];
+  high: any[] = [];
+  labels: any[] = [];
+  datas: any[] = [];
+  values: any[] = [];
+
   constructor(private asvc: AssetService, private msvc: MarketService,
               private svc: WalletService, private movsvc: MovementService,
-              private usvc: UserService){}
+              private usvc: UserService, private ptsvc: PointService){}
 
   ngOnInit(): void {
     this.currency = this.usvc.getCurrency();
@@ -189,6 +196,7 @@ export class WalletComponent implements OnInit {
         if(this.wallets.length == 0){
           this.needwallet = true;
         }
+        this.findPoints();
         this.findAssetsByWalletId();
         this.getMovements();
         this.error = undefined;
@@ -204,6 +212,7 @@ export class WalletComponent implements OnInit {
       return;
     }else{
       this.windex = this.windex - 1;
+      this.findPoints();
       this.findAssetsByWalletId();
       this.getMovements();
     }
@@ -214,6 +223,7 @@ export class WalletComponent implements OnInit {
       return;
     }else{
       this.windex = this.windex + 1;
+      this.findPoints();
       this.findAssetsByWalletId();
       this.getMovements();
     }
@@ -480,67 +490,85 @@ export class WalletComponent implements OnInit {
       }
   }
 
-  // renderChart(){
-  //   let existingChart = Chart.getChart("walletchart");
-  //   if (existingChart) {
-  //     existingChart.destroy();
-  //   }
+  renderChart(){
+    let existingChart = Chart.getChart("walletchart");
+    if (existingChart) {
+      existingChart.destroy();
+    }
 
-  //   const chart = new Chart("walletchart", {
-  //     data: {
-  //       datasets: [
-  //       {
-  //         type: 'line',
-  //         label: 'low',
-  //         data: this.low,
-  //         borderColor: '#FF0100',
-  //         tension: 0.1
-  //       },
-  //       {
-  //         type: 'line',
-  //         label: 'price',
-  //         data: this.datas,
-  //         borderColor: '#cccccc',
-  //         tension: 0.1
-  //       },
-  //       {
-  //         type: 'line',
-  //         label: 'high',
-  //         data: this.high,
-  //         borderColor: '#167a4c',
-  //         tension: 0.1
-  //       }],
-  //     labels: this.labels
-  //     },
-  //     options: {
-  //       scales: {
-  //         y: {
-  //           beginAtZero: false
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+    const chart = new Chart("walletchart", {
+      data: {
+        datasets: [
+        {
+          type: 'line',
+          label: 'low',
+          data: this.low,
+          borderColor: '#FF0100',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'price',
+          data: this.datas,
+          borderColor: '#cccccc',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'high',
+          data: this.high,
+          borderColor: '#167a4c',
+          tension: 0.1
+        }],
+      labels: this.labels
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
+  }
 
-  // getData(){
+  findPoints(){
+    const labelsd: any[] = [];
+    const datasd: any[] = [];
+    const highd: any[] = [];
+    const lowd: any[] = [];
 
-  //   const labelsd = [];
-  //   const datasd = [];
-  //   const highd = [];
-  //   const lowd = [];
-
-  //   for (const key in this.values) {
-  //     labelsd.push(this.values[key].datetime);
-  //     datasd.push(this.values[key].close);
-  //     highd.push(this.values[key].high);
-  //     lowd.push(this.values[key].low);
-  //   }
-  //   this.low = lowd.reverse();
-  //   this.high = highd.reverse();
-  //   this.labels = labelsd.reverse();
-  //   this.datas = datasd.reverse();
-  //   this.renderChart();
-  // }
-
+    this.ptsvc.findByWallet(this.wallets[this.windex].id).subscribe(
+      (resp) => {
+        this.values = resp.sort((a, b) => a.date!.localeCompare(b.date!));
+        console.log(this.values);
+        const nd = new Date();
+        const year = nd.getFullYear();
+        const month = String(nd.getMonth() + 1).padStart(2, '0');
+        const day = String(nd.getDate()).padStart(2, '0');
+        const today = `${year}-${month}-${day}`;
+        console.log(today)
+        for(let z = 0; z < this.values.length; z++){
+          if(this.values[z].date == today){
+            console.log('not today')
+          }else{
+            labelsd.push(this.values[z].date);
+            datasd.push(this.values[z].value);
+            highd.push(this.values[z].high);
+            lowd.push(this.values[z].low);
+          }
+        }
+        this.low = lowd
+        this.high = highd
+        this.labels = labelsd
+        this.datas = datasd
+        this.error = undefined;
+        this.renderChart();
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+  }
 
 }

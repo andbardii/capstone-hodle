@@ -31,8 +31,15 @@ export class HomeComponent {
   point:Point = {}
   dates: string[] = [] ;
 
-  wind:number = 0;
-  aind:number = 0;
+  // wind:number = 0;
+  // aind:number = 0;
+
+  low: any[] = [];
+  high: any[] = [];
+  labels: any[] = [];
+  datas: any[] = [];
+  values: any[] = [];
+  limits: any[] = [];
 
   constructor(private ptsvc: PointService, private ursvc: UserService,
               private wtsvc: WalletService, private router:Router,
@@ -69,6 +76,7 @@ export class HomeComponent {
               }
             }
             );
+            this.findPoints();
   }
 
   getValues(){
@@ -141,21 +149,6 @@ export class HomeComponent {
                   }
             )
           }
-          // // PER OGNI WALLET (PONITS HANDLER)
-          // for (let z = 0; z < wallets.length; z++){
-          //   // CERCA TUTTI I PUNTI LEGATI AL WALLET
-          //   this.ptsvc.findByWallet(wallets[z].id).subscribe(
-          //       (resp) => {
-          //         console.log(resp)
-          //         this.wpoints.push(resp);
-          //         console.log(this.wpoints);
-          //         this.error = undefined;
-          //       }, (err) => {
-          //         console.log(err.error.message);
-          //         this.error = err.error.message;
-          //       }
-          //     )
-          // }
 
           this.error = undefined;
         }
@@ -203,11 +196,11 @@ export class HomeComponent {
 
   completeExistingPoints(){
     console.log(this.wpoints)
-    console.log('qqqq',this.dailydata)
+    console.log(this.dailydata)
     // PER OGNI ARRAY DI PUNTI
 
-    console.error(this.wpoints.length);
-    console.error('aaaaa',this.dailydata.length);
+    console.log(this.wpoints.length);
+    console.log(this.dailydata.length);
 
     for(let h = 0; h < this.wpoints.length; h++){
       // PER OGNI PUNTO
@@ -473,6 +466,150 @@ export class HomeComponent {
       }
     }
     return null;
+  }
+
+  renderChart(){
+    let existingChart = Chart.getChart("totalchart");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    const chart = new Chart("totalchart", {
+      data: {
+        datasets: [
+        {
+          type: 'line',
+          label: 'low',
+          data: this.low,
+          borderColor: '#FF0100',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'price',
+          data: this.datas,
+          borderColor: '#cccccc',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'high',
+          data: this.high,
+          borderColor: '#167a4c',
+          tension: 0.1
+        },
+        {
+          type: 'line',
+          label: 'limit',
+          data: this.limits,
+          borderColor: '#444654',
+          tension: 0.1
+        }],
+      labels: this.labels
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
+  }
+
+  findPoints(){
+    this.wtsvc.findByUser().subscribe(
+      (resp) => {
+        console.log(resp);
+        let wats:Wallet[] = resp
+        let idx: number = 0;
+        for(let u = 0; u < wats.length; u++) {
+          this.ptsvc.findByWallet(wats[u].id).subscribe(
+            (resp) => {
+              console.log(resp);
+              this.values.push(resp)
+              idx = idx + 1
+              if(idx == wats.length){
+                this.mergeAndShow()
+              }
+              this.error = undefined;
+
+            },
+            (err) => {
+              console.log(err.error.message);
+              this.error = err.error.message;
+            }
+          )
+        }
+        this.error = undefined;
+      },
+      (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
+    console.log(this.values)
+  }
+
+  mergeAndShow() {
+    const limitsd: any[] = [];
+    const labelsd: any[] = [];
+    const datasd: any[] = [];
+    const highd: any[] = [];
+    const lowd: any[] = [];
+    console.log(this.values)
+
+    let marged:Point[] = this.values[0];
+
+    if(this.values.length > 1) {
+      console.log('IM HEREEEEEEEE', this.values.length)
+      for(let i = 1; i < this.values.length; i++){
+        console.log(Object.values(this.values[i]).length)
+        for(let j = 0; j < Object.values(this.values[i]).length; j++){
+
+          for(let k = 0; k < marged.length; k++){
+            console.log(this.values[i][j].date, marged[k].date)
+           if(this.values[i][j].date == marged[k].date){
+            console.log(marged[k].invested, this.values[i][j].invested)
+            marged[k].invested = marged[k].invested + this.values[i][j].invested;
+            marged[k].high = marged[k].invested + this.values[i][j].high;
+            marged[k].low = marged[k].invested + this.values[i][j].low;
+            marged[k].value = marged[k].invested + this.values[i][j].value;
+           }
+          }
+        }
+      }
+    }
+      this.values = marged;
+
+    console.log(this.values);
+
+    this.values = this.values.sort((a, b) => a.date!.localeCompare(b.date!));
+        console.log(this.values);
+        const nd = new Date();
+        const year = nd.getFullYear();
+        const month = String(nd.getMonth() + 1).padStart(2, '0');
+        const day = String(nd.getDate()).padStart(2, '0');
+        const today = `${year}-${month}-${day}`;
+        console.log(today)
+        for(let z = 0; z < this.values.length; z++){
+          if(this.values[z].date == today){
+            console.log('not today')
+          }else{
+            labelsd.push(this.values[z].date);
+            datasd.push(this.values[z].value);
+            highd.push(this.values[z].high);
+            lowd.push(this.values[z].low);
+            limitsd.push(this.values[z].invested);
+          }
+        }
+        this.limits = limitsd;
+        this.low = lowd
+        this.high = highd
+        this.labels = labelsd
+        this.datas = datasd
+        this.error = undefined;
+        this.renderChart();
   }
 
 }
