@@ -9,6 +9,8 @@ import { MarketService } from '../services/market.service';
 import { UserService } from '../services/user.service';
 import { WalletService } from '../services/wallet.service';
 import { Chart, registerables } from 'chart.js';
+import { User } from '../interfaces/user';
+import { Asset } from '../interfaces/asset';
 Chart.register(...registerables)
 
 @Component({
@@ -41,14 +43,20 @@ export class HomeComponent {
   values: any[] = [];
   limits: any[] = [];
 
+  user:User = {}
+  totval: number = 0;
+  assets: Asset[] = [];
+
   constructor(private ptsvc: PointService, private ursvc: UserService,
               private wtsvc: WalletService, private router:Router,
               private mksvc: MarketService, private atsvc: AssetService){}
 
   ngOnInit() {
     this.dates = this.getDates();
-
+    this.findUser();
     this.getValues();
+    this.findTotValue();
+    this.findAllAssets();
     this.pro$.subscribe(
       (res) => {
         if(res){
@@ -467,7 +475,7 @@ export class HomeComponent {
     }
     return null;
   }
-
+//! CHART METHODS
   renderChart(){
     let existingChart = Chart.getChart("totalchart");
     if (existingChart) {
@@ -612,4 +620,53 @@ export class HomeComponent {
         this.renderChart();
   }
 
+  findUser(){
+    this.user.email = this.ursvc.getEmail();
+    this.user.name = this.ursvc.getName();
+    this.user.username = this.ursvc.getUsername();
+    this.user.currency = this.ursvc.getCurrency();
+  }
+
+  findAllAssets(){
+    this.wtsvc.findByUser().subscribe(
+      (resp) => {
+        console.log(resp)
+        let walt:Wallet[] = resp
+        for(let p = 0; p < walt.length; p++){
+         this.atsvc.findByWalletId(walt[p].id).subscribe(
+          (resp) => {
+            console.log(resp)
+            let asst: Asset[] = resp;
+            for(let g = 0; g < asst.length; g++){
+              this.assets.push(asst[g]);
+            }
+          }, (err) => {
+            console.log(err.error.message);
+            this.error = err.error.message;
+          }
+         )
+        }
+
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    );
+  }
+
+  findTotValue() {
+    this.wtsvc.findByUser().subscribe(
+      (resp) => {
+        console.log(resp)
+        let walt:Wallet[] = resp
+        for(let p = 0; p < walt.length; p++){
+          this.totval = this.totval + walt[p].value!;
+        }
+
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    );
+  }
 }

@@ -3,8 +3,13 @@
     <div class="col-3 h-100 py-4 ps-3 pe-0">
       <div class="row h-100">
         <div class="col-12 h-50 pb-3">
-          <div class="card h-100">
-
+          <div class="card h-100 user" [routerLink]="['/user']" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#135938" class="bi bi-person-fill" viewBox="0 0 16 16">
+                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                </svg>
+                <h3><b>{{user.name}}</b></h3>
+                <h3>{{user.username}}</h3>
+                <p>Main currency: {{user.currency}}</p>
           </div>
         </div>
         <div class="col-12 h-25">
@@ -21,36 +26,31 @@
     </div>
     <div class="col-9 h-100 px-4 p-2">
       <div class="row h-100">
-        <div class="col-8 h-100">
+        <div class="col-12 h-100">
           <div class="row h-100">
             <div class="col-12 h-75 p-2 pt-3">
-              <div class="card h-100">
+              <div class="card h-100 p-2">
                 <canvas id="totalchart"></canvas>
+                <b class="text-center">Actual value: {{totval}} {{user.currency}}</b>
               </div>
             </div>
-            <div class="col-12 h-25 p-2 pb-3">
-              <div class="card h-100">
-                <p class="card-title p-2">Latest movements:</p>
-                <div class="row h-100 p-2 overflow-auto">
-                  <div class="col-12" >
-                    <!-- *ngFor="let movement of movs" -->
-                    <!-- <div class="col-7"><b>{{movement.id}}</b> - {{movement.movementType}}</div> -->
-
+            <div class="col-12 h-25 p-2 pb-3 px-3">
+              <div class="card row h-100 overflow-auto" >
+                <div class="col-12 h-25">
+                  <div class="row p-1">
+                    <div class="col-3"><h5><b>TICKER</b></h5></div>
+                    <div class="col-3"><h5><b>WALLET</b></h5></div>
+                    <div class="col-3"><h5><b>AMOUNT</b></h5></div>
+                    <div class="col-3"><h5><b>VALUE</b></h5></div>
+                  </div>
+                <div class="col-12 h-100"  *ngFor="let asset of assets">
+                  <div class="row p-1">
+                    <div class="col-3"><b>{{asset.ticker}}</b></div>
+                    <div class="col-3">{{asset.walletId}}</div>
+                    <div class="col-3"><b>{{asset.amount | number: '1.1-3'}}</b></div>
+                    <div class="col-3">{{asset.marketValue | number: '1.2-2'}} {{user.currency}}</div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4 ps-4 p-3 h-100">
-          <div class="card row h-100">
-            <p class="card-title ps-3">Asset allocation:</p>
-            <div class="col-12" >
-              <!-- *ngFor="let asset of assets" -->
-              <div class="row p-1">
-                <!-- <div class="col-4"><b>{{asset.ticker}}</b></div> -->
-                <!-- <div class="col-3"><b>{{asset.amount | number: '1.1-3'}}</b></div> -->
-                <!-- <div class="col-5">{{asset.marketValue | number: '1.2-2'}} {{currency}}</div> -->
               </div>
             </div>
           </div>

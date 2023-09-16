@@ -24,6 +24,7 @@ export class UserComponent implements OnInit{
     this.user.name = this.svc.getName();
     this.user.email = this.svc.getEmail();
     this.user.exp = this.svc.getExp();
+    this.user.currency = this.svc.getCurrency();
   }
 
   logout() {

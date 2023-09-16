@@ -1,0 +1,13 @@
+.user{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  svg{
+    cursor: pointer;
+    &:active{
+      transform: scale(1.1);
+    }
+  }
+
+}
