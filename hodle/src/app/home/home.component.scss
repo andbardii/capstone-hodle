@@ -11,3 +11,21 @@
   }
 
 }
+.card{
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.box{
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  align-items:center;
+}
+.val{
+  background-color: #105836;
+  border: 0;
+  border-radius: 35px;
+  color: #ffffff;
+  width: max-content;
+  padding: 1%;
+  font-size: x-large;
+}
