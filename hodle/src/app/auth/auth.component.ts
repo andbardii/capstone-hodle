@@ -8,12 +8,12 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthComponent implements OnInit{
 
+  help:boolean = false;
+
   constructor(private svc: AuthService){}
 
   ngOnInit(): void {
     this.svc.restoreUser();
   }
-
-
 
 }
