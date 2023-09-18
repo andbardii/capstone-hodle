@@ -13,11 +13,10 @@
             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
           </svg></a>
         </div>
-        <div class="col-12 h-50 text-center text-light">
+        <div class="col-12 h-50 text-center text-light p-4">
           <h3><b>WALLET {{windex+1}}</b></h3>
-          <p class="sub">{{wallets[windex].walletType}}</p>
           <h4 class="val">{{wallets[windex].name}}</h4>
-          <h3 class="card p-2 val"><b>{{wallets[windex].value | number: '1.2-2' }} {{currency}}</b></h3>
+          <canvas id="allochart"></canvas>
         </div>
         <div class="col-12 h-25 add">
           <div class="d-grid gap-2 mb-3">
@@ -37,33 +36,52 @@
     </div>
     <div class="col-12 col-lg-9 h-100 px-4 p-2">
       <div class="row h-100">
-        <div class="col-8 h-100">
+        <div class="col-12 h-75">
           <div class="row h-100">
-            <div class="col-12 h-75 p-2 pt-3">
-              <div class="card h-100">
+            <div class="col-12 h-100 p-2 pt-3 w-100">
+              <div class="card h-100 pb-5 chr w-100">
+                <h5 class="head p-3">Balance: <b>{{wallets[windex].value | number: '1.2-2' }} {{currency}}</b></h5>
                 <canvas id="walletchart"></canvas>
               </div>
             </div>
-            <div class="col-12 h-25 p-2 pb-3">
-              <div class="card h-100">
-                <p class="card-title p-2">Latest movements:</p>
-                <div class="row h-100 p-2 overflow-auto">
-                  <div class="col-12" *ngFor="let movement of movs">
-                    <div class="col-7"><b>{{movement.id}}</b> - {{movement.movementType}}</div>
-                  </div>
+          </div>
+        </div>
+        <div class="col-6 h-25">
+          <div class="row h-100 p-2">
+            <div class="card col-12 h-100 pb-3 px-0">
+              <div class="row p-1 lab">
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Ticker">TCK</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Amount">AMT</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Market Value">VAL</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Asset Type">TYP</abbr></b></div>
+              </div>
+              <div class="col-12 assts overflow-auto">
+                <div class="row p-1 pb-2" *ngFor="let asset of assets">
+                  <div class="col-3 ps-4 border-bottom border-success"><b>{{asset.ticker}}</b></div>
+                  <div class="col-3 ps-3 border-bottom border-success"><b>{{asset.amount | number: '1.1-3'}}</b></div>
+                  <div class="col-3 ps-2 border-bottom border-success">{{asset.marketValue | number: '1.2-2'}} {{currency}}</div>
+                  <div class="col-3 ps-2 border-bottom border-success">{{asset.assetType}}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-4 ps-4 p-3 h-100">
-          <div class="card row h-100">
-            <p class="card-title ps-3">Asset allocation:</p>
-            <div class="col-12" *ngFor="let asset of assets">
-              <div class="row p-1">
-                <div class="col-4"><b>{{asset.ticker}}</b></div>
-                <div class="col-3"><b>{{asset.amount | number: '1.1-3'}}</b></div>
-                <div class="col-5">{{asset.marketValue | number: '1.2-2'}} {{currency}}</div>
+        <div class="col-6 h-25">
+          <div class="row h-100 p-2">
+            <div class="card col-12 h-100 pb-3 px-0">
+              <div class="row p-1 lab">
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Unique ID">ID</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Movement Type">TYPE</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Movement Date">DATE</abbr></b></div>
+                <div class="col-3"><b><abbr class="text-decoration-none" title="Ending Asset ID & Ending Amount">INFO</abbr></b></div>
+              </div>
+              <div class="col-12 assts overflow-auto">
+                <div class="row p-1 pb-2" *ngFor="let movement of movs">
+                  <div class="col-3 ps-4 border-bottom border-success"><b>{{movement.id}}</b></div>
+                  <div class="col-3 ps-3 border-bottom border-success"><b>{{movement.movementType}}</b></div>
+                  <div class="col-3 ps-3 border-bottom border-success">{{movement.date}}</div>
+                  <div class="col-3 ps-1 border-bottom border-success">{{movement.endingAssetId}} - {{movement.endingAssetAmmount}}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -85,15 +103,15 @@
               <div class="d-grid gap-2 mb-3">
                 <input type="text" ngModel class="form-control" id="name"  name="name" placeholder="Wallet Name..." required />
               </div>
-                <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
-                  <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
-                  <option value="CONTO_TITOLI">CONTO TITOLI</option>
-                  <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
-                  <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
-                </select>
-                <div class="d-grid gap-2 mb-3">
-                  <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
-                </div>
+              <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
+                <option value="CONTO_TITOLI">CONTO TITOLI</option>
+                <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
+                <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
+              </select>
+              <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
+              </div>
             </form>
             <div class="err p-2 mt-1" *ngIf="error != undefined">
               {{error}}
@@ -118,47 +136,47 @@
               <div class="d-grid gap-2 mb-3">
                 <input type="text" ngModel class="form-control" id="name"  name="name" placeholder="Wallet Name..." required />
               </div>
-                <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
-                  <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
-                  <option value="CONTO_TITOLI">CONTO TITOLI</option>
-                  <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
+              <select ngModel class="form-select mb-3" aria-label="type" placeholder="Enter Wallet Type..." id="type" name="type" required>
+                <option value="CONTO_CORRENTE">CONTO CORRENTE</option>
+                <option value="CONTO_TITOLI">CONTO TITOLI</option>
+                <option value="CONTO_DEPOSITO">CONTO DEPOSITO</option>
                   <option value="CRYPTO_WALLET">CRYPTO WALLET</option>
                 </select>
                 <div class="d-grid gap-2 mb-3">
                   <button class="btn btn-success" type="submit"><b>ADD WALLET</b></button>
                 </div>
-            </form>
-            <div class="err p-2 mt-1" *ngIf="error != undefined">
-              {{error}}
+              </form>
+              <div class="err p-2 mt-1" *ngIf="error != undefined">
+                {{error}}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row m-0 h-100" *ngIf="postasset == true">
-    <div class="col-12 h-100 p-2 box overflow-auto">
-      <div class="card needw">
-        <div class="w-100 back ">
-          <svg (click)="postasset = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
-          </svg>
-        </div>
-        <div class="w-75">
-          <h4 class="card-title text-center mb-1"><b>ADD ASSET</b></h4>
-          <form #s="ngForm" (ngSubmit)="onSearch()">
-            <div class="mb-1 d-flex">
-              <input type="text" ngModel class="form-control search" id="keywords"  name="keywords" placeholder="Search Asset..." required />
-              <button class="btn btn-success" type="submit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                </svg>
-              </button>
+    <div class="row m-0 h-100" *ngIf="postasset == true">
+      <div class="col-12 h-100 p-2 box overflow-auto">
+        <div class="card needw">
+          <div class="w-100 back ">
+            <svg (click)="postasset = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
+            </svg>
+          </div>
+          <div class="w-75">
+            <h4 class="card-title text-center mb-1"><b>ADD ASSET</b></h4>
+            <form #s="ngForm" (ngSubmit)="onSearch()">
+              <div class="mb-1 d-flex">
+                <input type="text" ngModel class="form-control search" id="keywords"  name="keywords" placeholder="Search Asset..." required />
+                <button class="btn btn-success" type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#ffffff" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                  </svg>
+                </button>
             </div>
           </form>
           <div class="err p-2 mt-1" *ngIf="error != undefined">
             {{error}}
-            </div>
+          </div>
           <div class="match my-1 overflow-auto">
             <div class="card p-1" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
               <p class="m-0"><b>{{asset.symbol}}</b> ({{asset.instrument_name}})</p>
@@ -266,12 +284,12 @@
               <div class="mb-1">
                 <input type="number" [(ngModel)]="asset.walletId" class="d-none" id="walletId" name="walletId" placeholder="Your Wallet Id" readonly />
               </div>
-                <div class="d-grid gap-2 mb-1">
-                  <button class="btn btn-success" type="submit"><b>ADD ASSET</b></button>
-                </div>
+              <div class="d-grid gap-2 mb-1">
+                <button class="btn btn-success" type="submit"><b>ADD ASSET</b></button>
+              </div>
             </form>
             <div class="err p-2 mt-1" *ngIf="error != undefined">
-            {{error}}
+              {{error}}
             </div>
           </div>
         </div>
@@ -406,13 +424,13 @@
             <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
           </svg>
         </div>
-        <div class="card-body">
-          <div class="add h-25">
-            <h4 class="card-title text-center"><b>MOVE YOUR FUNDS</b></h4>
-            <button class="btn border border-success bolder" (click)="incoming = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">INCOMING</button>
-            <button class="btn border border-success mx-1" (click)="outgoing = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">OUTGOING</button>
-            <button class="btn border border-success me-1" (click)="transfer = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">TRANSFER</button>
-            <button class="btn border border-success" (click)="convert = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">CONVERT</button>
+        <div class="card-body w-100">
+          <h4 class="card-title text-center pb-1"><b>MOVE YOUR FUNDS</b></h4>
+          <div class="add movv h-25 w-100">
+            <button class="btn border border-success px-2" (click)="incoming = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">INCOMING</button>
+            <button class="btn border border-success px-2" (click)="outgoing = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">OUTGOING</button>
+            <button class="btn border border-success px-2" (click)="transfer = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">TRANSFER</button>
+            <button class="btn border border-success px-2" (click)="convert = true" *ngIf="incoming == false && outgoing == false && transfer == false && convert == false">CONVERT</button>
           </div>
 
           <div class="row tasset match my-2 overflow-auto">

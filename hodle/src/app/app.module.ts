@@ -8,6 +8,7 @@ import { NavComponent } from './nav/nav.component';
 import { AuthGuard } from './auth/auth.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { WalletTypePipe } from './pipes/wallet-type.pipe';
 
 @NgModule({
   declarations: [

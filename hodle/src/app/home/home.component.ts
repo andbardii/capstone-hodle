@@ -12,7 +12,6 @@ import { Chart, registerables } from 'chart.js';
 import { User } from '../interfaces/user';
 import { Asset } from '../interfaces/asset';
 Chart.register(...registerables)
-Chart.defaults.layout.padding = 15;
 
 
 
@@ -528,6 +527,7 @@ export class HomeComponent {
         }
       }
     });
+    Chart.defaults.layout.padding = 15
   }
 
   findPoints(){

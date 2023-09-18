@@ -1,7 +1,7 @@
 import { PointService } from './../services/point.service';
 import { AssetService } from './../services/asset.service';
 import { MarketService } from './../services/market.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { WalletService } from '../services/wallet.service';
 import { NgForm } from '@angular/forms';
 import { Wallet } from '../interfaces/wallet';
@@ -19,8 +19,7 @@ Chart.register(...registerables)
   templateUrl: './wallet.component.html',
   styleUrls: ['./wallet.component.scss']
 })
-export class WalletComponent implements OnInit {
-
+export class WalletComponent implements OnInit,AfterViewInit {
 
   @ViewChild('f') form!: NgForm;
   @ViewChild('s') sform!: NgForm;
@@ -67,13 +66,21 @@ export class WalletComponent implements OnInit {
   datas: any[] = [];
   values: any[] = [];
 
+  nams: any[] = [];
+  vals: any[] = [];
+
   constructor(private asvc: AssetService, private msvc: MarketService,
               private svc: WalletService, private movsvc: MovementService,
               private usvc: UserService, private ptsvc: PointService){}
 
+  ngAfterViewInit(): void {
+
+  }
+
   ngOnInit(): void {
     this.currency = this.usvc.getCurrency();
     this.findByUser();
+
   }
 
   onSubmit() {
@@ -198,6 +205,7 @@ export class WalletComponent implements OnInit {
         }
         this.findPoints();
         this.findAssetsByWalletId();
+        this.findAllocation()
         this.getMovements();
         this.error = undefined;
       }, (err) => {
@@ -214,6 +222,7 @@ export class WalletComponent implements OnInit {
       this.windex = this.windex - 1;
       this.findPoints();
       this.findAssetsByWalletId();
+      this.findAllocation()
       this.getMovements();
     }
   }
@@ -225,6 +234,7 @@ export class WalletComponent implements OnInit {
       this.windex = this.windex + 1;
       this.findPoints();
       this.findAssetsByWalletId();
+      this.findAllocation()
       this.getMovements();
     }
   }
@@ -496,6 +506,9 @@ export class WalletComponent implements OnInit {
       existingChart.destroy();
     }
 
+    Chart.defaults.layout.padding = 15
+    Chart.defaults.plugins.legend.labels.color = 'dark';
+    Chart.defaults.plugins.legend.display = true;
     const chart = new Chart("walletchart", {
       data: {
         datasets: [
@@ -530,6 +543,37 @@ export class WalletComponent implements OnInit {
         }
       }
     });
+  }
+
+  renderPie(){
+    let existingChart = Chart.getChart("allochart");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    Chart.defaults.layout.padding = 25;
+    Chart.defaults.plugins.legend.labels.color = 'white';
+    Chart.defaults.plugins.legend.display = false;
+    const c = new Chart("allochart", {
+      type: 'doughnut',
+      data: {
+        labels: this.nams,
+        datasets: [{
+          label: 'Allocation',
+          data: this.vals,
+          backgroundColor: [
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+          ],
+          hoverOffset: 4
+        }]
+      }
+    })
   }
 
   findPoints(){
@@ -569,6 +613,28 @@ export class WalletComponent implements OnInit {
         this.error = err.error.message;
       }
     )
+  }
+
+  findAllocation(){
+      this.nams = [];
+      this.vals = [];
+      this.asvc.findByWalletId(this.wallets[this.windex].id).subscribe(
+        (resp) => {
+          console.log(resp);
+          let asst = resp;
+          this.error = undefined;
+          console.log(asst.length)
+          for(let i = 0; i < asst.length; i++){
+            this.nams.push(asst[i].ticker)
+            this.vals.push(asst[i].marketValue)
+          }
+          this.renderPie()
+        }, (err) => {
+          console.log(err.error.message);
+          this.error = err.error.message;
+        }
+        )
+        console.log(this.nams, this.vals)
   }
 
 }
