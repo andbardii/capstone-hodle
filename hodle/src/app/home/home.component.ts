@@ -12,6 +12,10 @@ import { Chart, registerables } from 'chart.js';
 import { User } from '../interfaces/user';
 import { Asset } from '../interfaces/asset';
 Chart.register(...registerables)
+Chart.defaults.layout.padding = 15;
+
+
+
 
 @Component({
   selector: 'app-home',
@@ -57,33 +61,33 @@ export class HomeComponent {
     this.getValues();
     this.findTotValue();
     this.findAllAssets();
-    this.pro$.subscribe(
-      (res) => {
-        if(res){
-          console.log(res);
-          console.log(this.dailydata)
-          console.log(this.wpoints)
-          setTimeout(() => {
-            this.getPoints();
-          }, 1000);
-          this.set$.subscribe(
-            (ris) => {
-              if(ris){
-                console.log(ris);
-                console.log(this.dailydata)
-                console.log(this.wpoints)
-                setTimeout(() => {
-                  this.completeExistingPoints();
-                }, 1000);
-                setTimeout(() => {
-                  this.createMissingPoints();
-                }, 1000);
-              }
-            }
-                )
-              }
-            }
-            );
+    // this.pro$.subscribe(
+    //   (res) => {
+    //     if(res){
+    //       console.log(res);
+    //       console.log(this.dailydata)
+    //       console.log(this.wpoints)
+    //       setTimeout(() => {
+    //         this.getPoints();
+    //       }, 1000);
+    //       this.set$.subscribe(
+    //         (ris) => {
+    //           if(ris){
+    //             console.log(ris);
+    //             console.log(this.dailydata)
+    //             console.log(this.wpoints)
+    //             setTimeout(() => {
+    //               this.completeExistingPoints();
+    //             }, 1000);
+    //             setTimeout(() => {
+    //               this.createMissingPoints();
+    //             }, 1000);
+    //           }
+    //         }
+    //             )
+    //           }
+    //         }
+    //         );
             this.findPoints();
   }
 
@@ -478,6 +482,7 @@ export class HomeComponent {
 //! CHART METHODS
   renderChart(){
     let existingChart = Chart.getChart("totalchart");
+
     if (existingChart) {
       existingChart.destroy();
     }

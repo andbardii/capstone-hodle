@@ -1,8 +1,9 @@
 .user{
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content:flex-start;
   align-items: center;
+
   svg{
     cursor: pointer;
     &:active{
@@ -13,19 +14,28 @@
 }
 .card{
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
 }
 .box{
   display: flex;
   flex-direction: column;
-  justify-content:space-around;
+  justify-content:space-between;
   align-items:center;
 }
-.val{
-  background-color: #105836;
-  border: 0;
-  border-radius: 35px;
+.head{
+  background-color: #198753;
+  border-radius: 24px;
   color: #ffffff;
-  width: max-content;
-  padding: 1%;
-  font-size: x-large;
+  width: 100%;
 }
+.lab{
+  background-color: #198753;
+  border-radius: 19px;
+  color: #ffffff;
+  width: 100%;
+  margin: 0;
+}
+.assts{
+  height: 15vh;
+}
+

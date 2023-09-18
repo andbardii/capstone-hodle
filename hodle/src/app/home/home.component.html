@@ -1,12 +1,12 @@
 <div class="col-12 h-100 w-100 m-0" (click)="error = undefined">
   <div class="row m-0 h-100">
-    <div class="col-3 h-100 py-4 ps-3 pe-0">
+    <div class="d-none d-xl-inline col-3 h-100 py-4 ps-3 pe-0">
       <div class="row h-100">
         <div class="col-12 h-50 pb-3">
           <div class="card h-100 user" [routerLink]="['/user']" >
-              <h3>Welcome, <b>{{user.name}}</b></h3>
+              <h5 class="head p-3">Welcome, <b>{{user.name}}</b></h5>
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#135938" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#198753" class="bi bi-person-fill" viewBox="0 0 16 16">
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
                 </svg>
                 <h3>{{user.username}}</h3>
@@ -15,7 +15,7 @@
         </div>
         <div class="col-12 h-25">
           <div class="card h-100">
-
+            <h5 class="head p-3">Tasks situation</h5>
           </div>
         </div>
         <div class="col-12 h-25 pt-3">
@@ -25,37 +25,37 @@
         </div>
       </div>
     </div>
-    <div class="col-9 h-100 px-4 p-2">
+    <div class="col-12 col-xl-9 h-100 px-4 p-2">
       <div class="row h-100">
         <div class="col-12 h-100">
           <div class="row h-100">
             <div class="col-12 h-75 p-2 pt-3">
-              <div class="card h-100 p-2 box">
+              <div class="card h-100 pb-xl-5 box">
+                <h5 class="head p-3">Balance: <b>{{totval | number: '1.2-2'}} {{user.currency}}</b></h5>
                 <canvas id="totalchart"></canvas>
-                <b class="text-center val">Actual value: {{totval | number: '1.2-2'}} {{user.currency}}</b>
               </div>
             </div>
             <div class="col-12 h-25 p-2 pb-3 px-3">
-              <div class="card row h-100 overflow-auto" >
-                <div class="col-12 h-25">
-                  <div class="row p-1">
-                    <div class="col-1"><b>TCKER</b></div>
-                    <div class="col-1"><b>WALT</b></div>
-                    <div class="col-2"><b>AMOUNT</b></div>
-                    <div class="col-2"><b>AVRG PURCH PRICE</b></div>
-                    <div class="col-2"><b>VAL</b></div>
-                    <div class="col-2"><b>EXG</b></div>
-                    <div class="col-2"><b>TYP</b></div>
+              <div class="card row h-100" >
+                <div class="col-12 h-25 pb-3 px-0">
+                  <div class="row p-1 lab">
+                    <div class="col-1"><b><abbr class="text-decoration-none" title="Ticker">TCK</abbr></b></div>
+                    <div class="col-1"><b><abbr class="text-decoration-none" title="Wallet ID">W ID</abbr></b></div>
+                    <div class="col-2"><b><abbr class="text-decoration-none" title="Amount">AMT</abbr></b></div>
+                    <div class="col-2"><b><abbr class="text-decoration-none" title="Average Purchase Price">AVPP</abbr></b></div>
+                    <div class="col-2"><b><abbr class="text-decoration-none" title="Market Value">VAL</abbr></b></div>
+                    <div class="col-2"><b><abbr class="text-decoration-none" title="Exchange">EXG</abbr></b></div>
+                    <div class="col-2"><b><abbr class="text-decoration-none" title="Asset Type">TYP</abbr></b></div>
                   </div>
-                <div class="col-12 h-100"  *ngFor="let asset of assets">
-                  <div class="row p-1">
-                    <div class="col-1"><b>{{asset.ticker}}</b></div>
-                    <div class="col-1">{{asset.walletId}}</div>
-                    <div class="col-2"><b>{{asset.amount | number: '1.1-3'}}</b></div>
-                    <div class="col-2">{{asset.averagePurchasePrice | number: '1.2-2'}}</div>
-                    <div class="col-2">{{asset.marketValue | number: '1.2-2'}} {{user.currency}}</div>
-                    <div class="col-2">{{asset.exchange}}</div>
-                    <div class="col-2">{{asset.assetType}}</div>
+                <div class="col-12 assts overflow-auto">
+                  <div class="row p-1 pb-2" *ngFor="let asset of assets">
+                    <div class="col-1 ps-4 border-bottom border-success"><b>{{asset.ticker}}</b></div>
+                    <div class="col-1 ps-4 border-bottom border-success">{{asset.walletId}}</div>
+                    <div class="col-2 ps-3 border-bottom border-success"><b>{{asset.amount | number: '1.1-3'}}</b></div>
+                    <div class="col-2 ps-3 border-bottom border-success">{{asset.averagePurchasePrice | number: '1.2-2'}}</div>
+                    <div class="col-2 ps-2 border-bottom border-success">{{asset.marketValue | number: '1.2-2'}} {{user.currency}}</div>
+                    <div class="col-2 ps-2 border-bottom border-success">{{asset.exchange}}</div>
+                    <div class="col-2 ps-2 border-bottom border-success">{{asset.assetType}}</div>
                   </div>
                 </div>
               </div>
