@@ -1,1 +1,64 @@
-<p>todos works!</p>
+<div class="col-12 h-100 w-100 m-0">
+  <div class="row m-0 h-100">
+    <div class="d-none d-lg-inline col-3 bg-success h-100 p-4">
+      <div class="row h-50">
+        <div class="col-12 p-3 h-100">
+          <h3 class="text-light mb-2 text-center"><b>TASKS PANEL</b></h3>
+          <div class="col-12 h-25 add">
+            <div class="d-grid gap-2 mb-3">
+              <button class="btn btn-light" (click)="findAll()"><b>SHOW ALL TASKS</b></button>
+            </div>
+            <div class="d-grid gap-2 mb-3">
+              <button class="btn btn-light" (click)="findCompleted()"><b>SHOW COMPLETED</b></button>
+            </div>
+            <div class="d-grid gap-2 mb-3">
+              <button class="btn btn-light" (click)="findPending()"><b>SHOW PENDING</b></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row h-50 p-3">
+        <div class="col-12 h-100">
+          <h5 class="text-light mb-2 text-center"><b>ADD TASK</b></h5>
+          <form #f="ngForm" (ngSubmit)="addTodo()">
+            <div class="mb-3">
+              <input type="text" [(ngModel)]="todo.title" class="form-control w-75 d-inline mb-3" id="title"  name="title" placeholder="Task's title" required />
+              <button class="btn btn-light w-25 d-inline m-0" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+              </button>
+              <textarea [(ngModel)]="todo.description" id="description" class="form-control" name="description" rows="4" cols="25" placeholder="Task's description" required></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-9 h-100">
+      <div class="row h-100">
+        <div class="col-12 p-4">
+
+        </div>
+        <div class="results col-12">
+          <div class="row h-100 overflow-auto">
+            <div class="col-6 p-3" *ngFor="let todo of todos">
+              <div class="card todo">
+                <div class="card-body">
+                  <div class="d-flex top">
+                    <h4 class="card-title "><b>{{todo.title}}</b></h4>
+                    <svg (click)="toggleStatus(todo.id)" xmlns="http://www.w3.org/2000/svg" width="30" height="30" [style.fill]="todo.status! | togstatus" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                  </div>
+                  <p class="card-text m-0">{{todo.description}}</p>
+                  <p class="card-text m-0"><b>Date:</b> {{todo.date}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

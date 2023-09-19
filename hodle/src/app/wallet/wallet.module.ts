@@ -5,13 +5,10 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletComponent } from './wallet.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { WalletTypePipe } from '../pipes/wallet-type.pipe';
-
 
 @NgModule({
   declarations: [
-    WalletComponent,
-    WalletTypePipe
+    WalletComponent
   ],
   imports: [
     CommonModule,

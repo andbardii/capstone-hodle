@@ -57,7 +57,7 @@ export class HomeComponent {
   ngOnInit() {
     this.dates = this.getDates();
     this.findUser();
-    this.getValues();
+    // this.getValues();
     this.findTotValue();
     this.findAllAssets();
     // this.pro$.subscribe(

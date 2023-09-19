@@ -5,11 +5,13 @@ import { TodosRoutingModule } from './todos-routing.module';
 import { TodosComponent } from './todos.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TogstatusPipe } from '../pipes/togstatus.pipe';
 
 
 @NgModule({
   declarations: [
-    TodosComponent
+    TodosComponent,
+    TogstatusPipe
   ],
   imports: [
     CommonModule,

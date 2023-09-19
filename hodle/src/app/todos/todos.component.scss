@@ -1,0 +1,16 @@
+.todo{
+  &:hover{
+    background-color: lightgrey;
+    transform: scale(1.05);
+  }
+  .top{
+    justify-content: space-between;
+    align-items: center;
+    svg{
+      cursor: pointer;
+      &:hover{
+        transform: scale(1.05);
+      }
+    }
+  }
+}

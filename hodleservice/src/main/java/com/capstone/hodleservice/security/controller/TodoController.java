@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class TodoController {
 		return resp;
 	}
 	
-	@GetMapping("/byuser/{id}")
+	@GetMapping("/byuser/{userId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByUserId(@PathVariable Long userId) {
 		List<Todo> l = svc.findByUserId(userId);
@@ -43,7 +44,7 @@ public class TodoController {
 		return resp;
 	}
 	
-	@GetMapping("/bystatus/{id}/{status}")
+	@GetMapping("/bystatus/{userId}/{status}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> findByUserAndStatus(@PathVariable Long userId, @PathVariable boolean status) {
 		List<Todo> l = svc.findByUserAndStatus(userId, status);
@@ -56,6 +57,14 @@ public class TodoController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> addTodo(@RequestBody Todo todo) {
 	     Todo t = svc.addTodo(todo.getUserId(), todo.getTitle(), todo.getDescription());
+	     return new ResponseEntity<Todo>(t, HttpStatus.CREATED);
+	}
+	
+	//PUT METHODS
+	@PutMapping("/togstatus/{id}")
+//	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<?> toggleStaus(@PathVariable Long id) {
+	     Todo t = svc.toggleStatus(id);
 	     return new ResponseEntity<Todo>(t, HttpStatus.CREATED);
 	}
 }
