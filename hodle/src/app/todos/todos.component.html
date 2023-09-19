@@ -14,7 +14,7 @@
               <div class="d-grid gap-2 mb-4">
                 <button class="btn btn-light" (click)="findPending()"><b>SHOW PENDING</b></button>
               </div>
-              <div class="d-grid gap-2 mb-4">
+              <div class="d-grid gap-2 mb-5">
                 <button class="btn btn-light" (click)="todomaker = true"><b>ADD TASK</b></button>
               </div>
             </div>
@@ -31,7 +31,14 @@
         </div>
       </div>
       <div class="row h-25 p-3">
+        <div class="col-12 h-100 del">
+          <div class="d-grid gap-2 mb-5">
 
+          </div>
+          <div class="d-grid gap-2 mb-4">
+            <button class="btn btn-light" (click)="deleteAll()"><b>DELETE ALL</b></button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-12 col-lg-9 h-100">

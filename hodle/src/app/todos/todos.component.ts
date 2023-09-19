@@ -105,8 +105,24 @@ export class TodosComponent implements OnInit {
       }
     );
   }
+
   turnOff(){
     this.todomaker = false;
     this.findAll()
+  }
+
+  deleteAll(){
+    for(let i = 0; i < this.todos.length; i++) {
+      this.svc.deleteTodo(this.todos[i].id).subscribe(
+        (resp) => {
+          console.log(resp);
+          this.error = undefined;
+        }, (err) => {
+          console.log(err.error.message);
+          this.error = err.error.message;
+        }
+        );
+        this.findAll();
+    }
   }
 }

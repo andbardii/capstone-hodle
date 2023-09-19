@@ -569,6 +569,22 @@ export class WalletComponent implements OnInit,AfterViewInit {
             '#59981A',
             '#76B947',
             '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7'
           ],
           hoverOffset: 4
         }]

@@ -55,3 +55,19 @@ svg{
     border-radius: 25px;
   }
 }
+.del{
+  .btn{
+    border-radius: 35px;
+    padding: 2%;
+    color: #105836;
+    &:hover{
+      background-color: darkred;
+      color: whitesmoke;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    &:active{
+      transform: scale(1.01);
+    }
+  }
+}
