@@ -16,6 +16,8 @@ export class TodosComponent implements OnInit {
   todos:Todo[] = [];
   todo:Todo = {};
 
+  todomaker: boolean = false;
+
   constructor(public svc: TodoService){}
 
   ngOnInit(): void {
@@ -27,7 +29,8 @@ export class TodosComponent implements OnInit {
       (resp) => {
         console.log(resp);
         this.error = undefined;
-        this.findAll();
+
+        this.turnOff();
         this.todo = {};
         this.form.reset()
       }, (err) => {
@@ -38,9 +41,29 @@ export class TodosComponent implements OnInit {
   }
 
   findPending() {
+    this.svc.findByStatus(false).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.todos = resp;
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
   }
 
   findCompleted() {
+    this.svc.findByStatus(true).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.todos = resp;
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
   }
 
   findAll() {
@@ -69,4 +92,21 @@ export class TodosComponent implements OnInit {
     )
   }
 
+  deleteTodo(id: any) {
+    this.svc.deleteTodo(id).subscribe(
+      (resp) => {
+        console.log(resp);
+        this.error = undefined;
+        this.findAll();
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+        this.findAll();
+      }
+    );
+  }
+  turnOff(){
+    this.todomaker = false;
+    this.findAll()
+  }
 }

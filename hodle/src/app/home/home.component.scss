@@ -39,3 +39,20 @@
   height: 15vh;
 }
 
+.bb{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  .bc{
+    background-color: #0d462b86;
+    width: 90%;
+    height: 20%;
+    border-radius: 25px;
+  }
+  .ft{
+    background-color: #084b2c;
+    height: 100%;
+    border-radius: 25px;
+  }
+}

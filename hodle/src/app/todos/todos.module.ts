@@ -6,12 +6,14 @@ import { TodosComponent } from './todos.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TogstatusPipe } from '../pipes/togstatus.pipe';
+import { TogsituationPipe } from '../pipes/togsituation.pipe';
 
 
 @NgModule({
   declarations: [
     TodosComponent,
-    TogstatusPipe
+    TogstatusPipe,
+    TogsituationPipe
   ],
   imports: [
     CommonModule,

@@ -11,6 +11,8 @@ import { WalletService } from '../services/wallet.service';
 import { Chart, registerables } from 'chart.js';
 import { User } from '../interfaces/user';
 import { Asset } from '../interfaces/asset';
+import { TodoService } from '../services/todo.service';
+import { Todo } from '../interfaces/todo';
 Chart.register(...registerables)
 
 
@@ -49,14 +51,19 @@ export class HomeComponent {
   user:User = {}
   totval: number = 0;
   assets: Asset[] = [];
+  wallets: Wallet[] = [];
+
+  todos: Todo[] = [] ;
 
   constructor(private ptsvc: PointService, private ursvc: UserService,
               private wtsvc: WalletService, private router:Router,
-              private mksvc: MarketService, private atsvc: AssetService){}
+              private mksvc: MarketService, private atsvc: AssetService,
+              private tdsvc: TodoService){}
 
   ngOnInit() {
     this.dates = this.getDates();
     this.findUser();
+    this.findTodos();
     // this.getValues();
     this.findTotValue();
     this.findAllAssets();
@@ -637,6 +644,7 @@ export class HomeComponent {
       (resp) => {
         console.log(resp)
         let walt:Wallet[] = resp
+        this.wallets = resp;
         for(let p = 0; p < walt.length; p++){
          this.atsvc.findByWalletId(walt[p].id).subscribe(
           (resp) => {
@@ -673,5 +681,17 @@ export class HomeComponent {
         this.error = err.error.message;
       }
     );
+  }
+
+  findTodos(){
+    this.tdsvc.findByUser().subscribe(
+      (resp) => {
+        console.log(resp)
+        this.todos = resp
+      }, (err) => {
+        console.log(err.error.message);
+        this.error = err.error.message;
+      }
+    )
   }
 }

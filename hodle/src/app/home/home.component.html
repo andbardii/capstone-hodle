@@ -14,13 +14,26 @@
           </div>
         </div>
         <div class="col-12 h-25">
-          <div class="card h-100">
-            <h5 class="head p-3"><b>Tasks</b> situation</h5>
+          <div class="card h-100 bb">
+            <h5 class="head p-3"><b>Tasks</b> resume</h5>
+            <div class="bc">
+              <div class="ft" [style.width]="todos | togsithome">
+              </div>
+            </div>
+            <p class="mb-2 "><b>{{todos | togsithome }} </b>completed</p>
           </div>
         </div>
         <div class="col-12 h-25 pt-3">
           <div class="card h-100">
-            <h5 class="head p-3"><b>Asset</b> allocation</h5>
+            <h5 class="head p-3"><b>Wallet</b> resume</h5>
+            <div class="row h-50 overflow-auto p-3">
+              <div class="col-12 p-2" *ngFor="let wallet of wallets">
+                <div class="row p-0">
+                  <div class="col-6 border-bottom border-success"><b >{{wallet.name}} </b></div>
+                  <div class="col-6 border-bottom border-success">{{wallet.value | number: '1.2-2'}} {{user.currency}}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

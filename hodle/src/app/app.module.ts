@@ -12,8 +12,8 @@ import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
-    ],
+    NavComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
