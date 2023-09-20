@@ -16,6 +16,8 @@
 ![Chart.js](https://img.shields.io/badge/chart.js-white?style=for-the-badge&logo=chart.js)
 
 #### External API
-- [<b>Twelve Data</b>](https://rapidapi.com/twelvedata/api/twelve-data1/details)
+- [<b>Twelve Data</b>](https://rapidapi.com/twelvedata/api/twelve-data1)
 - [<b>Seeking Alpha</b>](https://rapidapi.com/apidojo/api/seeking-alpha)
 - [<b>Alpha Vantage</b>](https://rapidapi.com/alphavantage/api/alpha-vantage)
+
+
