@@ -24,8 +24,8 @@
 # HOW TO USE
 1) Install or set the above mentioned languages, framewors and libraries.
 2) Open pgAdmin and create a new database, then link your username, password and database to the ![appro](https://img.shields.io/badge/application.properties-198753) file of the Spring project, you can use visual studio code or eclipse to manage it.
-3) Inside the application.properties set in the hibernate settings ![dacre](https://img.shields.io/badge/drop-and-create-198753), then in AuthRunner file run the method setRoleDefault() once, then restart the server with ![upd](https://img.shields.io/badge/update-198753).
+3) Inside the application.properties set in the hibernate settings ![dacre](https://img.shields.io/badge/dropng%20andng%20create-198753), then in AuthRunner file run the method setRoleDefault() once, then restart the server with ![upd](https://img.shields.io/badge/update-198753).
 4) Open visual studio code if you haven’t already and run the command ![ngso](https://img.shields.io/badge/ng%20s-198753) on a suitable terminal, starting from the directory "hodle".
 5) Open on your browser ![localhost](https://img.shields.io/badge/http://localhost:4200-198753)
-6) Now to have full access to the application you will need to register a new account or log in with my user ![user](https://img.shields.io/badge/@andbardii%20qwerty-198753) to view data already complete.
+6) Now to have full access to the application you will need to register a new account or log in with my user ![user](https://img.shields.io/badge/@andbardii-qwerty-198753) to view data already complete.
 7) <b>ENJOY HODLE!</b>
