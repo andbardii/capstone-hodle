@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 })
 export class MarketService {
 
-
   headers = new HttpHeaders();
 
   constructor(private http: HttpClient){}

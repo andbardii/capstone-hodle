@@ -20,6 +20,8 @@ export class DataComponent implements OnInit {
 
   bycountry: boolean = false;
   bytype: boolean = false;
+  byintermediary: boolean = false;
+  bydiversification: boolean = false;
 
   wallets: Wallet[] = [];
   assets: Asset[] = [];
@@ -75,7 +77,6 @@ export class DataComponent implements OnInit {
   total: number = 0;
 
   renderByCountry() {
-    console.log(this.countries, this.values);
     let existingChart = Chart.getChart("bycountry");
     if (existingChart) {
       existingChart.destroy();
@@ -158,7 +159,6 @@ export class DataComponent implements OnInit {
   tot: number = 0;
 
   renderByType() {
-    console.log(this.types, this.vals);
     let existingChart = Chart.getChart("bytype");
     if (existingChart) {
       existingChart.destroy();
@@ -235,4 +235,167 @@ export class DataComponent implements OnInit {
 
   }
 
+  // BYINTERMEDIARY
+  intermediarys: any[] = [];
+  valss: number[] = [];
+  tott: number = 0;
+
+  renderByIntermediary() {
+    let existingChart = Chart.getChart("byintermediary");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    const c = new Chart("byintermediary", {
+      type: 'doughnut',
+      data: {
+        labels: this.intermediarys,
+        datasets: [{
+          label: 'Allocation By Intermediary',
+          data: this.valss,
+          backgroundColor: [
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+          ],
+          hoverOffset: 4
+        }]
+      }
+    })
+  }
+
+  dataByIntermediary() {
+    if(!this.byintermediary){
+      this.tott = 0;
+      this.byintermediary = !this.byintermediary
+      this.intermediarys = [];
+      this.valss = [];
+      const map = new Map<string, number>();
+
+      this.assets.forEach((asset) => {
+        const { intermediary, marketValue } = asset;
+        if (map.has(intermediary!)) {
+          map.set(intermediary!, map.get(intermediary!)! + marketValue!);
+        } else {
+          map.set(intermediary!, marketValue!);
+        }
+      });
+
+      map.forEach((value, key) => {
+        if(key === null){
+          this.intermediarys.push('Unknown');
+        }else{
+          this.intermediarys.push(key);
+        }
+        this.valss.push(value);
+        this.tott = this.tott + value
+      });
+      setTimeout(() => this.renderByIntermediary(), 10 )
+    }else{
+      this.byintermediary = !this.byintermediary
+    }
+
+  }
+
+  // BYINTERMEDIARY
+  names: any[] = [];
+  valsss: number[] = [];
+  tottt: number = 0;
+
+  renderByDiversification() {
+    let existingChart = Chart.getChart("bydiversification");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    const c = new Chart("bydiversification", {
+      type: 'doughnut',
+      data: {
+        labels: this.names,
+        datasets: [{
+          label: 'Total Diversification',
+          data: this.valsss,
+          backgroundColor: [
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#2F5233',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#81B622',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#2F5233',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+          ],
+          hoverOffset: 4
+        }]
+      }
+    })
+  }
+
+  dataByDiversification() {
+    if(!this.bydiversification){
+      this.tottt = 0;
+      this.bydiversification = !this.bydiversification
+      this.names = [];
+      this.valsss = [];
+      const map = new Map<string, number>();
+
+      this.assets.forEach((asset) => {
+        const { ticker, marketValue } = asset;
+        if (map.has(ticker!)) {
+          map.set(ticker!, map.get(ticker!)! + marketValue!);
+        } else {
+          map.set(ticker!, marketValue!);
+        }
+      });
+
+      map.forEach((value, key) => {
+        if(key === null){
+          this.names.push('Unknown');
+        }else{
+          this.names.push(key);
+        }
+        this.valsss.push(value);
+        this.tottt = this.tottt + value
+      });
+      setTimeout(() => this.renderByDiversification(), 10 )
+    }else{
+      this.bydiversification = !this.bydiversification
+    }
+
+  }
 }
