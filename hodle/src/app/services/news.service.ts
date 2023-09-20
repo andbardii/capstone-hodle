@@ -10,9 +10,9 @@ export class NewsService {
 
   constructor(private http: HttpClient){}
 
-  // GET STOCK METHODS
+  // GET NEWS METHODS
   searchNews() {
-      this.headers = this.headers.set('X-RapidAPI-Host', 'twelve-data1.p.rapidapi.com')
+      this.headers = this.headers.set('X-RapidAPI-Host', 'seeking-alpha.p.rapidapi.com')
                                  .set('X-RapidAPI-Key', 'f4620064b9mshdb8d1bb25f138ebp15508ajsn932fd197513a');
 
       return this.http.get('https://seeking-alpha.p.rapidapi.com/articles/v2/list-trending?size=20', {
