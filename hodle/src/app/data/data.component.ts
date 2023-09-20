@@ -6,6 +6,7 @@ import { Wallet } from '../interfaces/wallet';
 import { Asset } from '../interfaces/asset';
 import { Assetzone } from '../enumerated/assetzone';
 import { UserService } from '../services/user.service';
+import { Assettype } from '../enumerated/assettype';
 Chart.register(...registerables)
 
 @Component({
@@ -15,7 +16,7 @@ Chart.register(...registerables)
 })
 export class DataComponent implements OnInit {
 
-  error: string | undefined;
+  error!: string | undefined;
 
   bycountry: boolean = false;
   bytype: boolean = false;
@@ -121,7 +122,6 @@ export class DataComponent implements OnInit {
   dataByCountry() {
     if(!this.bycountry){
       this.total = 0;
-      this.getPercent();
       this.bycountry = !this.bycountry
       this.countries = [];
       this.values = [];
@@ -143,6 +143,7 @@ export class DataComponent implements OnInit {
           this.countries.push(key);
         }
         this.values.push(value);
+        this.total = this.total + value
       });
       setTimeout(() => this.renderByCountry(), 10 )
     }else{
@@ -151,12 +152,87 @@ export class DataComponent implements OnInit {
 
   }
 
-  getPercent(){
-    this.values.forEach((value) =>{
-      this.total = this.total + value;
+  // BYTYPE
+  types: any[] = [];
+  vals: number[] = [];
+  tot: number = 0;
+
+  renderByType() {
+    console.log(this.types, this.vals);
+    let existingChart = Chart.getChart("bytype");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    const c = new Chart("bytype", {
+      type: 'doughnut',
+      data: {
+        labels: this.types,
+        datasets: [{
+          label: 'Allocation By Type',
+          data: this.vals,
+          backgroundColor: [
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+            '#2F5233',
+            '#94C973',
+            '#81B622',
+            '#ECF87F',
+            '#81B622',
+            '#ECF87F',
+            '#3D550C',
+            '#59981A',
+            '#76B947',
+            '#B1D8B7',
+          ],
+          hoverOffset: 4
+        }]
+      }
     })
   }
-  // BYTYPE
 
+  dataByType() {
+    if(!this.bytype){
+      this.tot = 0;
+      this.bytype = !this.bytype
+      this.types = [];
+      this.vals = [];
+      const map = new Map<Assettype, number>();
+
+      this.assets.forEach((asset) => {
+        const { assetType, marketValue } = asset;
+        if (map.has(assetType!)) {
+          map.set(assetType!, map.get(assetType!)! + marketValue!);
+        } else {
+          map.set(assetType!, marketValue!);
+        }
+      });
+
+      map.forEach((value, key) => {
+        if(key === null){
+          this.types.push('Unknown');
+        }else{
+          this.types.push(key);
+        }
+        this.vals.push(value);
+        this.tot = this.tot + value
+      });
+      setTimeout(() => this.renderByType(), 10 )
+    }else{
+      this.bytype = !this.bytype
+    }
+
+  }
 
 }
