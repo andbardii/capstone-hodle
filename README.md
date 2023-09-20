@@ -25,6 +25,6 @@
 1) Install or set the above mentioned languages, framewors and libraries.
 2) Open pgAdmin and create a new database, then link your username, password and database to the application.properties file of the Spring project, you can use visual studio code or eclipse to manage it.
 3) Inside the application.properties set in the hibernate settings "drop-and-create", then in AuthRunner file run the method setRoleDefault() once, then restart the server with "update".
-4) Open visual studio code if you haven’t already and run the command https://img.shields.io/badge/ng%20s%20-o-198753 on a suitable terminal, starting from the directory "hodle".
+4) Open visual studio code if you haven’t already and run the command (https://img.shields.io/badge/ng%20s%20-o-198753) on a suitable terminal, starting from the directory "hodle".
 5) Now to have full access to the application you will need to register a new account or log in with my user (user: @andbardii, pass: qwerty) to view data already complete.
 6) <b>ENJOY HODLE!</b>
