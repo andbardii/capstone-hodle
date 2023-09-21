@@ -19,7 +19,7 @@ Chart.register(...registerables)
   templateUrl: './wallet.component.html',
   styleUrls: ['./wallet.component.scss']
 })
-export class WalletComponent implements OnInit,AfterViewInit {
+export class WalletComponent implements OnInit {
 
   @ViewChild('f') form!: NgForm;
   @ViewChild('s') sform!: NgForm;
@@ -73,10 +73,6 @@ export class WalletComponent implements OnInit,AfterViewInit {
               private svc: WalletService, private movsvc: MovementService,
               private usvc: UserService, private ptsvc: PointService){}
 
-  ngAfterViewInit(): void {
-
-  }
-
   ngOnInit(): void {
     this.currency = this.usvc.getCurrency();
     this.findByUser();
@@ -94,6 +90,8 @@ export class WalletComponent implements OnInit,AfterViewInit {
             this.postwallet = false;
             this.findByUser();
             this.form.reset();
+            setTimeout(() => this.renderChart(), 10);
+            setTimeout(() => this.renderPie(), 10);
           }, (err) => {
             console.log(err.error.message);
             this.error = err.error.message;
@@ -270,13 +268,26 @@ export class WalletComponent implements OnInit,AfterViewInit {
     this.asset.exchange = asset.exchange;
   }
 
+  closePostAsset() {
+    this.postasset = false;
+    setTimeout(() => this.renderChart(), 10);
+    setTimeout(() => this.renderPie(), 10);
+  }
+
+  closePostWallet() {
+    this.postwallet = false;
+    setTimeout(() => this.renderChart(), 10);
+    setTimeout(() => this.renderPie(), 10);
+  }
+
+
   findAssetsByWalletId(){
     this.asvc.findByWalletId(this.wallets[this.windex].id).subscribe(
       (resp) => {
         this.assets = resp;
         console.log(this.assets);
         this.error = undefined;
-        // this.updatePrice();
+        this.updatePrice();
         this.checkCurrency();
       }, (err) => {
         console.log(err.error.message);
@@ -488,6 +499,9 @@ export class WalletComponent implements OnInit,AfterViewInit {
         this.convert = false;
        }else{
         this.movement = false;
+        setTimeout(() => this.renderChart(), 10);
+        setTimeout(() => this.renderPie(), 10);
+
        }
   }
 
@@ -497,6 +511,8 @@ export class WalletComponent implements OnInit,AfterViewInit {
       this.convertcurr = false;
       }else{
        this.maincurrency = false;
+       setTimeout(() => this.renderChart(), 10);
+      setTimeout(() => this.renderPie(), 10);
       }
   }
 

@@ -125,7 +125,7 @@
     <div class="col-12 h-100 p-5 box">
       <div class="card needw">
         <div class="w-100 back">
-          <svg (click)="postwallet = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+          <svg (click)="closePostWallet()" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
           </svg>
         </div>
@@ -158,7 +158,7 @@
       <div class="col-12 h-100 p-2 box overflow-auto">
         <div class="card needw">
           <div class="w-100 back ">
-            <svg (click)="postasset = false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+            <svg (click)="closePostAsset()" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#198753" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
             </svg>
           </div>
@@ -178,7 +178,7 @@
             {{error}}
           </div>
           <div class="match my-1 overflow-auto">
-            <div class="card p-1" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
+            <div class="card mb-1 p-2" *ngFor="let asset of matches" (click)="chooseNewAsset(asset)">
               <p class="m-0"><b>{{asset.symbol}}</b> ({{asset.instrument_name}})</p>
               <p class="m-0">Zone: {{asset.country}}</p>
               <p class="m-0">Type: {{asset.instrument_type}}</p>
@@ -435,7 +435,7 @@
 
           <div class="row tasset match my-2 overflow-auto">
             <div class="col-12" *ngIf="incoming == true || outgoing == true || transfer == true || convert == true">
-            <div class="card p-2" *ngFor="let a of assets" (click)="selectAsset(a.id)">
+            <div class="card p-2 mb-1" *ngFor="let a of assets" (click)="selectAsset(a.id)">
              <p class="m-0"><b>{{a.ticker}} </b> ({{a.amount}})</p>
              <p class="m-0">{{a.name}}</p>
             </div>
@@ -499,7 +499,7 @@
                 {{error}}
                 </div>
               <div class="match my-1 overflow-auto">
-                <div class="card p-1" *ngFor="let asset of matches" (click)="checkAsset(asset)">
+                <div class="card p-2 mb-1" *ngFor="let asset of matches" (click)="checkAsset(asset)">
                   <p class="m-0"><b>{{asset.symbol}}</b> ({{asset.instrument_name}})</p>
                   <p class="m-0">Zone: {{asset.country}}</p>
                   <p class="m-0">Type: {{asset.instrument_type}}</p>

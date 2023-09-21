@@ -86,27 +86,6 @@
         </div>
       </div>
     </div>
-    <div class="col-12 card data p-4 mb-3" (click)="dataByIntermediary()">
-      <h4 class="m-0">Allocation by <b>intermediary</b></h4>
-    </div>
-    <div class="col-12 card data pie p-5 mb-3 h-75" *ngIf="byintermediary == true">
-      <div class="col-6">
-        <canvas id="byintermediary"></canvas>
-      </div>
-      <div class="col-6 overflow-auto">
-        <div class="row">
-          <div class="col-5">
-            <p *ngFor="let i of intermediarys"><b>{{i}}</b></p>
-          </div>
-          <div class="col-4">
-            <p  *ngFor="let v of valss">{{v | number: '1.2-2'}} {{currency}}</p>
-          </div>
-          <div class="col-3">
-            <p  *ngFor="let v of valss"><b class="border-bottom border-3 border-success">{{(v * 100)/tott | number: '1.2-2'}}%</b></p>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
