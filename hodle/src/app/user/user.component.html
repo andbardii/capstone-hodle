@@ -52,16 +52,16 @@
       </div>
       <div class="row" *ngIf="supp == true">
         <div class="col-12 p-3 ">
-          <div class="card rounded-4 p-3">
-            <h2 class="m-0 text-center"><b>Contact support</b></h2>
+          <div class="card rounded-5 p-3">
+            <h2 class="m-0 mb-2 text-center"><b>Contact support</b></h2>
             <form #f="ngForm" (ngSubmit)="emailHandler($event)">
-              <label>Username</label>
               <input  class="form-control mb-2" [ngModel]="user.username" type="text" name="user_name" readonly>
               <input  class="form-control mb-2" [ngModel]="user.email" type="email" name="user_email" readonly>
               <textarea  class="form-control" ngModel name="message" rows="9" cols="25" placeholder="Write your message here" required></textarea>
-              <div class="d-grid gap-2 mt-3">
-                <button class="btn btn-success" type="submit">Send</button>
+              <div class="d-grid gap-2 my-3">
+                <button class="btn btn-success" type="submit" (click)="supp = false">Send</button>
               </div>
+              <p class="text-center">We will reply as soon as possible, thank you for your understanding.</p>
             </form>
           </div>
         </div>
