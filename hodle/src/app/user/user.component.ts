@@ -1,7 +1,10 @@
 import { AuthService } from 'src/app/services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user';
+import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
+import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'app-user',
@@ -11,6 +14,10 @@ import { User } from '../interfaces/user';
 export class UserComponent implements OnInit{
 
   user: User = {};
+
+  supp:boolean = false;
+
+  @ViewChild('f') form!: NgForm;
 
   constructor(private athsvc:AuthService, private svc:UserService){}
 
@@ -29,5 +36,15 @@ export class UserComponent implements OnInit{
 
   logout() {
     this.athsvc.logout();
+  }
+
+  emailHandler(e: Event) {
+    e.preventDefault();
+    emailjs.sendForm('service_ivcepkh', 'template_9q6uajb', e.target as HTMLFormElement, 'Ez87DD_mc6nP2YS88')
+      .then((result: EmailJSResponseStatus) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+      });
   }
 }

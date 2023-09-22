@@ -13,35 +13,56 @@
       </div>
     </div>
     <div class="col-12 col-md-9 h-100 szone">
-      <div class="row">
+      <div class="row" *ngIf="supp == false">
         <div class="col-12 p-3">
           <div class="logout card" (click)="logout()">
-            <p class="m-0"><b>LOG OUT</b></p>
+            <p class="m-0"><b>Loug out</b></p>
           </div>
         </div>
         <div class="col-12 p-3">
           <div class="logout card">
-            <p class="m-0"><b>CLEAR DATA</b></p>
+            <p class="m-0"><b>Clear all data</b></p>
           </div>
         </div>
         <div class="col-12 p-3">
           <div class="logout card">
-            <p class="m-0"><b>DELETE ACCOUNT</b></p>
+            <p class="m-0"><b>Delete account</b></p>
           </div>
         </div>
         <div class="col-12 p-3">
           <div class="logout card">
-            <p class="m-0"><b>CHANGE CURRENCY</b></p>
+            <p class="m-0"><b>Change main currency</b></p>
           </div>
         </div>
         <div class="col-12 p-3">
           <div class="logout card">
-            <p class="m-0"><b>EDIT EMAIL</b></p>
+            <p class="m-0"><b>Edit email</b></p>
           </div>
         </div>
         <div class="col-12 p-3">
           <div class="logout card">
-            <p class="m-0"><b>EDIT USERNAME</b></p>
+            <p class="m-0"><b>Edit username</b></p>
+          </div>
+        </div>
+        <div class="col-12 p-3 mt-5">
+          <div class="sup card" (click)="supp = true">
+            <p class="m-0"><b>Contact support</b></p>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="supp == true">
+        <div class="col-12 p-3 ">
+          <div class="card rounded-4 p-3">
+            <h2 class="m-0 text-center"><b>Contact support</b></h2>
+            <form #f="ngForm" (ngSubmit)="emailHandler($event)">
+              <label>Username</label>
+              <input  class="form-control mb-2" [ngModel]="user.username" type="text" name="user_name" readonly>
+              <input  class="form-control mb-2" [ngModel]="user.email" type="email" name="user_email" readonly>
+              <textarea  class="form-control" ngModel name="message" rows="9" cols="25" placeholder="Write your message here" required></textarea>
+              <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-success" type="submit">Send</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
