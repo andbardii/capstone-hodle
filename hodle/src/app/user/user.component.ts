@@ -39,6 +39,7 @@ export class UserComponent implements OnInit{
   }
 
   emailHandler(e: Event) {
+    console.log('inviata')
     e.preventDefault();
     emailjs.sendForm('service_ivcepkh', 'template_9q6uajb', e.target as HTMLFormElement, 'Ez87DD_mc6nP2YS88')
       .then((result: EmailJSResponseStatus) => {
