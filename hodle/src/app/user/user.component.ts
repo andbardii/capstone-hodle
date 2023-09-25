@@ -44,6 +44,7 @@ export class UserComponent implements OnInit{
     emailjs.sendForm('service_ivcepkh', 'template_9q6uajb', e.target as HTMLFormElement, 'Ez87DD_mc6nP2YS88')
       .then((result: EmailJSResponseStatus) => {
         console.log(result.text);
+        this.supp = false;
       }, (error) => {
         console.log(error.text);
       });
