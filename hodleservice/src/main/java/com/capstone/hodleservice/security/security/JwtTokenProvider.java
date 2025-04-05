@@ -62,7 +62,7 @@ public class JwtTokenProvider {
             Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
-                    .parse(token);
+                    .parseClaimsJws(token);  // Usa parseClaimsJws invece di parse
             return true;
         } catch (MalformedJwtException ex) {
             throw new MyAPIException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
